@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="AscendLogo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | Ascend × breathdivinity</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black:#080808; --white:#f4f4ef; --mid:#0f0f0f;
+            --border:#1c1c1c; --muted:#484848; --accent:#c8c8c0;
+        }
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+        html{scroll-behavior:smooth;}
+        body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;cursor:none;}
+
+        /* CURSOR */
+        .cur{width:8px;height:8px;background:var(--white);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+        .cur-ring{width:34px;height:34px;border:1px solid rgba(244,244,239,.28);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .25s,height .25s,border-color .25s;}
+        .cur-ring.xl{width:64px;height:64px;border-color:rgba(244,244,239,.5);}
+
+        /* NAV */
+        nav{position:fixed;top:0;left:0;right:0;height:64px;display:grid;grid-template-columns:220px 1fr 220px;align-items:center;padding:0 2.5rem;background:rgba(8,8,8,.97);border-bottom:1px solid var(--border);z-index:400;}
+        .nav-brand{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:5px;color:var(--white);text-decoration:none;}
+        .nav-center{display:flex;justify-content:center;gap:2.5rem;list-style:none;}
+        .nav-center a{font-size:.68rem;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;}
+        .nav-center a:hover,.nav-center a.active{color:var(--white);}
+        .nav-right{display:flex;justify-content:flex-end;}
+        .nav-cta{font-size:.65rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--black);background:var(--white);text-decoration:none;padding:.5rem 1.3rem;border-radius:1px;transition:background .2s;}
+        .nav-cta:hover{background:var(--accent);}
+
+        /* TICKER */
+        .ticker{margin-top:64px;height:32px;border-bottom:1px solid var(--border);overflow:hidden;display:flex;align-items:center;}
+        .t-track{display:flex;animation:tRoll 28s linear infinite;white-space:nowrap;}
+        .t-item{font-size:.56rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);padding:0 2.4rem;border-right:1px solid var(--border);display:flex;align-items:center;height:32px;flex-shrink:0;}
+        .t-item b{color:var(--white);font-weight:500;margin-left:.4rem;}
+        @keyframes tRoll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+        /* ══ HERO HEADER ══ */
+        .hero-header{
+            min-height:55vh;display:flex;flex-direction:column;justify-content:flex-end;
+            padding:5rem;border-bottom:1px solid var(--border);
+            position:relative;overflow:hidden;
+        }
+        .hero-header::before{
+            content:'ASCEND';
+            position:absolute;right:-2rem;top:50%;transform:translateY(-50%);
+            font-family:'Bebas Neue',sans-serif;
+            font-size:clamp(8rem,18vw,20rem);
+            letter-spacing:-.02em;color:rgba(244,244,239,.025);
+            pointer-events:none;white-space:nowrap;line-height:1;
+        }
+        .hero-header-inner{
+            display:grid;grid-template-columns:1fr 1fr;
+            gap:4rem;align-items:flex-end;position:relative;z-index:1;
+        }
+        .hero-eyebrow{font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:1.6rem;display:flex;align-items:center;gap:.8rem;}
+        .hero-eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--muted);}
+        .hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,7vw,8rem);line-height:.88;letter-spacing:3px;}
+        .hero-title .outline{color:transparent;-webkit-text-stroke:1.5px var(--white);}
+        .hero-right-col{display:flex;flex-direction:column;gap:1.5rem;padding-bottom:.4rem;}
+        .hero-desc{font-size:.88rem;color:var(--muted);line-height:1.95;max-width:400px;}
+        .hero-desc strong{color:var(--accent);font-weight:500;}
+        .hero-meta-row{display:flex;gap:2.5rem;}
+        .hero-meta-item{display:flex;flex-direction:column;gap:.25rem;}
+        .hero-meta-label{font-size:.52rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);}
+        .hero-meta-value{font-size:.88rem;font-weight:500;}
+
+        /* ══ STATS STRIP ══ */
+        .stats-strip{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border);}
+        .stat{padding:2rem 2.5rem;border-right:1px solid var(--border);transition:background .25s;}
+        .stat:last-child{border-right:none;}
+        .stat:hover{background:var(--mid);}
+        .stat-n{font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:2px;line-height:1;}
+        .stat-l{font-size:.56rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-top:.35rem;}
+
+        /* ══ LEADER ══ */
+        .leader-wrap{
+            display:grid;grid-template-columns:120px 1fr 380px;
+            min-height:580px;border-bottom:1px solid var(--border);
+        }
+        .leader-num-col{
+            border-right:1px solid var(--border);
+            display:flex;flex-direction:column;align-items:center;
+            justify-content:flex-start;padding:3rem 0;gap:1.5rem;
+        }
+        .big-num{
+            font-family:'Bebas Neue',sans-serif;font-size:4.5rem;
+            letter-spacing:2px;color:var(--border);
+            writing-mode:vertical-rl;text-orientation:mixed;
+            transform:rotate(180deg);line-height:1;
+        }
+        .role-pill{
+            writing-mode:vertical-rl;transform:rotate(180deg);
+            font-size:.52rem;letter-spacing:2.5px;text-transform:uppercase;
+            color:var(--black);background:var(--white);
+            padding:.4rem .25rem;border-radius:1px;font-weight:700;white-space:nowrap;
+        }
+        .leader-info{
+            padding:4rem;display:flex;flex-direction:column;justify-content:center;
+            border-right:1px solid var(--border);
+        }
+        .crown-tag{display:inline-flex;align-items:center;gap:.5rem;font-size:.56rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent);margin-bottom:1.8rem;}
+        .leader-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,5vw,5.5rem);letter-spacing:3px;line-height:.92;margin-bottom:1rem;}
+        .chips{display:flex;gap:1.8rem;flex-wrap:wrap;margin-bottom:2rem;}
+        .chip{display:flex;flex-direction:column;gap:.2rem;}
+        .chip-l{font-size:.5rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+        .chip-v{font-size:.82rem;font-weight:500;}
+        .divider-line{width:40px;height:1px;background:var(--border);margin-bottom:1.8rem;}
+        .bio{font-size:.82rem;color:var(--muted);line-height:1.95;max-width:460px;}
+        .bio strong{color:var(--accent);font-weight:500;}
+        .leader-photo{position:relative;overflow:hidden;background:#0a0a0a;}
+        .leader-photo img{width:100%;height:100%;object-fit:cover;filter:brightness(.75) grayscale(.2);transition:filter .6s,transform .7s cubic-bezier(.22,1,.36,1);}
+        .leader-photo:hover img{filter:brightness(.95) grayscale(0);transform:scale(1.04);}
+        .photo-empty{width:100%;height:100%;min-height:580px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;}
+        .photo-empty span{font-size:3.5rem;opacity:.1;}
+        .photo-empty p{font-size:.54rem;letter-spacing:2px;text-transform:uppercase;color:var(--border);text-align:center;padding:0 1rem;}
+
+        /* ══ TEAM GRID ══ */
+        .team-grid-label{padding:1.1rem 2.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+        .tgl-t{font-size:.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);}
+        .tgl-c{font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+
+        .team-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border-bottom:1px solid var(--border);}
+        .member-card{background:var(--black);display:grid;grid-template-columns:240px 1fr;min-height:420px;transition:background .25s;}
+        .member-card:hover{background:var(--mid);}
+
+        .mc-photo{position:relative;overflow:hidden;background:#0a0a0a;border-right:1px solid var(--border);}
+        .mc-photo img{width:100%;height:100%;object-fit:cover;filter:brightness(.72) grayscale(.3);transition:filter .5s,transform .6s cubic-bezier(.22,1,.36,1);}
+        .member-card:hover .mc-photo img{filter:brightness(.92) grayscale(0);transform:scale(1.05);}
+        .mc-photo-empty{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.7rem;}
+        .mc-photo-empty span{font-size:2.5rem;opacity:.1;}
+        .mc-photo-empty p{font-size:.5rem;letter-spacing:2px;text-transform:uppercase;color:var(--border);text-align:center;padding:0 .8rem;}
+        .mc-num-overlay{position:absolute;top:1rem;left:1rem;font-family:'Bebas Neue',sans-serif;font-size:3.5rem;letter-spacing:2px;color:rgba(244,244,239,.08);line-height:1;pointer-events:none;}
+        .mc-name-tag{position:absolute;bottom:0;left:0;right:0;padding:.8rem 1rem;background:linear-gradient(transparent,rgba(8,8,8,.85));font-size:.56rem;letter-spacing:2.5px;text-transform:uppercase;color:rgba(244,244,239,.5);}
+
+        .mc-info{padding:2.5rem 2rem;display:flex;flex-direction:column;justify-content:center;}
+        .mc-num{font-family:'Bebas Neue',sans-serif;font-size:3.5rem;letter-spacing:2px;color:var(--border);line-height:1;margin-bottom:-.2rem;}
+        .mc-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,2.5vw,2.5rem);letter-spacing:3px;line-height:1;margin-bottom:.5rem;}
+        .mc-chips{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.2rem;}
+        .mc-chip{display:flex;flex-direction:column;gap:.15rem;}
+        .mc-chip-l{font-size:.48rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+        .mc-chip-v{font-size:.76rem;font-weight:500;}
+        .mc-divider{width:28px;height:1px;background:var(--border);margin-bottom:1.1rem;}
+        .mc-bio{font-size:.74rem;color:var(--muted);line-height:1.85;}
+        .mc-bio strong{color:var(--accent);font-weight:500;}
+
+        /* ══ COLLAB BANNER ══ */
+        .collab-section{display:grid;grid-template-columns:1fr 1px 1fr;border-bottom:1px solid var(--border);min-height:200px;}
+        .collab-left{padding:3.5rem 4rem;display:flex;flex-direction:column;justify-content:center;gap:.8rem;}
+        .collab-eyebrow{font-size:.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);}
+        .collab-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,3.5vw,3.5rem);letter-spacing:4px;line-height:1;}
+        .collab-x{color:var(--muted);}
+        .collab-vdivider{background:var(--border);}
+        .collab-right{padding:3.5rem 4rem;display:flex;flex-direction:column;justify-content:center;gap:.8rem;}
+        .collab-body{font-size:.82rem;color:var(--muted);line-height:1.9;max-width:380px;font-style:italic;font-weight:300;}
+        .collab-body strong{color:var(--accent);font-weight:500;font-style:normal;}
+        .collab-flag{font-size:.58rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.6rem;}
+        .collab-flag::before{content:'';display:block;width:20px;height:1px;background:var(--muted);}
+
+        /* FOOTER */
+        footer{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--border);}
+        .fl{padding:3.5rem 4rem;border-right:1px solid var(--border);}
+        .fl-brand{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:6px;margin-bottom:.6rem;}
+        .fl-tag{font-size:.72rem;color:var(--muted);line-height:1.8;}
+        .fr{display:grid;grid-template-columns:1fr 1fr;}
+        .fc{padding:3.5rem 2.5rem;border-right:1px solid var(--border);}
+        .fc:last-child{border-right:none;}
+        .fc-t{font-size:.56rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:1.2rem;}
+        .fc ul{list-style:none;display:flex;flex-direction:column;gap:.7rem;}
+        .fc a{font-size:.76rem;color:var(--white);text-decoration:none;opacity:.38;transition:opacity .2s;}
+        .fc a:hover{opacity:1;}
+        .fbot{padding:1.2rem 4rem;display:flex;justify-content:space-between;border-top:1px solid var(--border);}
+        .fbot p{font-size:.58rem;color:var(--muted);letter-spacing:1px;}
+
+        .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease;}
+        .reveal.visible{opacity:1;transform:translateY(0);}
+
+        ::-webkit-scrollbar{width:3px;}
+        ::-webkit-scrollbar-track{background:var(--black);}
+        ::-webkit-scrollbar-thumb{background:var(--border);}
+
+        @media(max-width:1024px){
+            nav{grid-template-columns:auto 1fr auto;padding:0 1.2rem;}
+            .hero-header{padding:3rem 2rem;}
+            .hero-header-inner{grid-template-columns:1fr;gap:2rem;}
+            .leader-wrap{grid-template-columns:80px 1fr;min-height:auto;}
+            .leader-photo{display:none;}
+            .team-grid{grid-template-columns:1fr;}
+            .member-card{grid-template-columns:1fr;min-height:auto;}
+            .mc-photo{min-height:280px;border-right:none;border-bottom:1px solid var(--border);}
+            .stats-strip{grid-template-columns:1fr 1fr;}
+            .collab-section{grid-template-columns:1fr;}
+            .collab-vdivider{height:1px;width:100%;}
+            footer{grid-template-columns:1fr;}
+            .fl{border-right:none;border-bottom:1px solid var(--border);}
+            .fbot{flex-direction:column;gap:.4rem;}
+        }
+    </style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+<div class="cur-ring" id="cur-ring"></div>
+
+<!-- NAV -->
+<nav>
+    <div><a href="index.html" class="nav-brand"><img src="data:image/png;base64,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" alt="Ascend" style="height:28px;width:auto;object-fit:contain;display:inline-block;vertical-align:middle;margin-right:6px;">ASCEND</a></div>
+    <ul class="nav-center">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="about.html" class="active">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-right"><a href="shop.html" class="nav-cta">Shop Now</a></div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker"><div class="t-track" id="t-track"></div></div>
+
+<!-- ══ HERO HEADER ══ -->
+<div class="hero-header">
+    <div class="hero-header-inner">
+        <div>
+            <p class="hero-eyebrow">The People Behind Ascend</p>
+            <h1 class="hero-title">
+                MEET<br>THE<br><span class="outline">TEAM.</span>
+            </h1>
+        </div>
+        <div class="hero-right-col">
+            <p class="hero-desc">
+                Five builders. One vision. We're students, designers who believe
+                <strong>Filipino streetwear deserves to stand alongside the world's best.</strong>
+                This is our group — and this is our story. Studied at <strong>Arellano University, Pasig City.</strong>
+            </p>
+            <div class="hero-meta-row">
+                <div class="hero-meta-item">
+                    <span class="hero-meta-label">Course</span>
+                    <span class="hero-meta-value">BS Information Technology</span>
+                </div>
+                <div class="hero-meta-item">
+                    <span class="hero-meta-label">Based</span>
+                    <span class="hero-meta-value">Pasig City, PH 🇵🇭</span>
+                </div>
+                <div class="hero-meta-item">
+                    <span class="hero-meta-label">Year</span>
+                    <span class="hero-meta-value">2026</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ STATS STRIP ══ -->
+<div class="stats-strip reveal">
+    <div class="stat"><div class="stat-n">5</div><div class="stat-l">Team Members</div></div>
+    <div class="stat"><div class="stat-n">1</div><div class="stat-l">Group Leader</div></div>
+    <div class="stat"><div class="stat-n">IT</div><div class="stat-l">Course</div></div>
+    <div class="stat"><div class="stat-n">PH</div><div class="stat-l">Pasig City</div></div>
+</div>
+
+<!-- ══ LEADER ══ -->
+<div class="leader-wrap reveal">
+    <div class="leader-num-col">
+        <span class="big-num">01</span>
+        <span class="role-pill">👑 Leader</span>
+    </div>
+    <div class="leader-info">
+        <div class="crown-tag">👑 Group Leader · Project Head</div>
+        <div class="leader-name">JIRO NARIO</div>
+        <div class="chips">
+            <div class="chip"><span class="chip-l">Course</span><span class="chip-v">BS Information Technology</span></div>
+            <div class="chip"><span class="chip-l">Role</span><span class="chip-v">Lead Developer</span></div>
+            <div class="chip"><span class="chip-l">Scope</span><span class="chip-v">Homepage · Nav · CSS · JS · Finalization</span></div>
+        </div>
+        <div class="divider-line"></div>
+         <p class="bio">
+            Gierol is the <strong>head coder of the entire project</strong> — he wrote the majority of the code, handling every line of CSS, all JavaScript logic and functions, the overall design system, and the full site concept and structure. Every interactive feature, animation, layout, and page you see was built and finalized by him. He also <strong>created the style concept</strong> for all web pages, took each member's individual code contributions and <strong>restyled and integrated them</strong> to match the overall vibe and aesthetic of the site — making sure everything felt cohesive from page to page.
+        </p>
+    </div>
+    <div class="leader-photo">
+        <img src="JIRO.jpg" alt="JIRO"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="photo-empty" style="display:none">
+            <span>👤</span><p>Place photo at<br>photos/leader.jpg</p>
+        </div>
+    </div>
+</div>
+
+<!-- ══ TEAM GRID ══ -->
+<div class="team-grid-label reveal">
+    <span class="tgl-t">Team Members — 02 through 05</span>
+    <span class="tgl-c">4 Members</span>
+</div>
+
+<div class="team-grid">
+
+    <!-- BRIAN -->
+    <div class="member-card reveal">
+        <div class="mc-photo">
+            <img src="BRIAN.jpg" alt="Brian"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="mc-photo-empty" style="display:none"><span>👤</span><p>photos/brian.jpg</p></div>
+            <div class="mc-num-overlay">02</div>
+            <div class="mc-name-tag">Brian</div>
+        </div>
+        <div class="mc-info">
+            <div class="mc-num">02</div>
+            <div class="mc-name">BRIAN JASPER ROMANO</div>
+            <div class="mc-chips">
+                <div class="mc-chip"><span class="mc-chip-l">Role</span><span class="mc-chip-v">Shop Page Developer</span></div>
+                <div class="mc-chip"><span class="mc-chip-l">Course</span><span class="mc-chip-v">BS Information Technology</span></div>
+            </div>
+            <div class="mc-divider"></div>
+              <p class="mc-bio">Brian handled the <strong>product catalog</strong> — managing all product selections, writing the item descriptions, organizing the product lineup, and making sure every piece in the shop is properly presented with the right details.</p>
+        </div>
+    </div>
+
+    <!-- NEIL -->
+    <div class="member-card reveal">
+        <div class="mc-photo">
+            <img src="NEIL.jpg" alt="Neil"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="mc-photo-empty" style="display:none"><span>👤</span><p>photos/neil.jpg</p></div>
+            <div class="mc-num-overlay">03</div>
+            <div class="mc-name-tag">Neil</div>
+        </div>
+        <div class="mc-info">
+            <div class="mc-num">03</div>
+            <div class="mc-name">NEIL GARILAO</div>
+            <div class="mc-chips">
+                <div class="mc-chip"><span class="mc-chip-l">Role</span><span class="mc-chip-v">Product Section · Content</span></div>
+                <div class="mc-chip"><span class="mc-chip-l">Course</span><span class="mc-chip-v">BS Information Technology</span></div>
+            </div>
+            <div class="mc-divider"></div>
+             <p class="mc-bio">Neil took care of the <strong>product section on the homepage</strong> — building out and organizing the product display on the main index page so visitors get a strong first look at the collection when they land on the site.</p>
+        </div>
+    </div>
+
+    <!-- ERWIN -->
+    <div class="member-card reveal">
+        <div class="mc-photo">
+            <img src="ERWIN.jpg" alt="Erwin"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="mc-photo-empty" style="display:none"><span>👤</span><p>photos/erwin.jpg</p></div>
+            <div class="mc-num-overlay">04</div>
+            <div class="mc-name-tag">Erwin</div>
+        </div>
+        <div class="mc-info">
+            <div class="mc-num">04</div>
+            <div class="mc-name">ERWIN JUSTINE NOVA</div>
+            <div class="mc-chips">
+                <div class="mc-chip"><span class="mc-chip-l">Role</span><span class="mc-chip-v">Registration · Documentation</span></div>
+                <div class="mc-chip"><span class="mc-chip-l">Course</span><span class="mc-chip-v">BS Information Technology</span></div>
+            </div>
+            <div class="mc-divider"></div>
+             <p class="mc-bio">Erwin built the <strong>login and register page</strong> — creating the form where users can sign in or create an account to access the site. He also handled the project documentation, writing up the narrative and background of the Ascend × breathdivinity collab.</p>
+        </div>
+    </div>
+
+    <!-- ZANE -->
+    <div class="member-card reveal">
+        <div class="mc-photo">
+            <img src="ZANE.jpg" alt="Zane"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="mc-photo-empty" style="display:none"><span>👤</span><p>photos/zane.jpg</p></div>
+            <div class="mc-num-overlay">05</div>
+            <div class="mc-name-tag">Zane</div>
+        </div>
+        <div class="mc-info">
+            <div class="mc-num">05</div>
+            <div class="mc-name">ZANE DIMPAS</div>
+            <div class="mc-chips">
+                <div class="mc-chip"><span class="mc-chip-l">Role</span><span class="mc-chip-v">Contact Page · QA Testing</span></div>
+                <div class="mc-chip"><span class="mc-chip-l">Course</span><span class="mc-chip-v">BS Information Technology</span></div>
+            </div>
+            <div class="mc-divider"></div>
+            <p class="mc-bio">Zane worked on the <strong>FAQ section</strong> — writing and organizing the frequently asked questions to help users quickly find answers about the site, products, and the Ascend × breathdivinity collab.</p>
+        </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ══ COLLAB BANNER ══ -->
+<div class="collab-section reveal">
+    <div class="collab-left">
+        <span class="collab-eyebrow">A Collaborative Partnership</span>
+        <div class="collab-title">ASCEND <span class="collab-x">×</span> BREATHDIVINITY</div>
+    </div>
+    <div class="collab-vdivider"></div>
+    <div class="collab-right">
+        <p class="collab-body">Born in the streets of the USA, built for the warriors of the Philippines. Two brands. One mission. <strong>From the USA — straight to PH.</strong></p>
+        <span class="collab-flag">USA × Philippines 🇺🇸 → 🇵🇭</span>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <div class="fl">
+        <div class="fl-brand">ASCEND</div>
+        <p class="fl-tag">Premium gymwear & streetwear.<br>Built by IT students At ARELLANO UNIVERSITY in Pasig City. 🇵🇭</p>
+    </div>
+    <div class="fr">
+        <div class="fc">
+            <p class="fc-t">Navigate</p>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+        <div class="fc">
+            <p class="fc-t">Collab</p>
+            <ul>
+                <li><a href="#">breathdivinity</a></li>
+                <li><a href="#">From USA to PH</a></li>
+            </ul>
+        </div>
+    </div>
+</footer>
+<div class="fbot">
+    <p>© 2026 Ascend Gymwear. All rights reserved.</p>
+    <p>Ascend × breathdivinity — From USA, For PH. 🇵🇭</p>
+</div>
+
+<script>
+/* CURSOR */
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function t(){cur.style.left=mx+'px';cur.style.top=my+'px';rx+=(mx-rx)*.13;ry+=(my-ry)*.13;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(t);})();
+document.addEventListener('mouseover',e=>ring.classList.toggle('xl',!!e.target.closest('a,button,.member-card,.leader-wrap')));
+
+/* TICKER */
+[['Group Leader','Gierol L.'],['Members','5 People'],
+ ['Course','BS Information Technology'],['Based','Pasig City, PH 🇵🇭'],
+ ['Project','Ascend × breathdivinity'],['Stack','HTML · CSS · JS'],
+ ['Year','2024'],['Collab','USA → PH 🇺🇸'],
+].flatMap(x=>[x,x]).forEach(([l,v])=>{
+    const d=document.createElement('div');
+    d.className='t-item';
+    d.innerHTML=`${l} <b>${v}</b>`;
+    document.getElementById('t-track').appendChild(d);
+});
+
+/* Show placeholders for empty/missing photos */
+document.querySelectorAll('.leader-photo img,.mc-photo img').forEach(img=>{
+    const src=img.getAttribute('src');
+    if(!src||src===window.location.href){
+        img.style.display='none';
+        const ph=img.nextElementSibling;
+        if(ph) ph.style.display='flex';
+    }
+});
+
+/* SCROLL REVEAL */
+const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+},{threshold:.06});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

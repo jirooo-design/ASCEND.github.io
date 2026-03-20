@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="AscendLogo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Center | Ascend × breathdivinity</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+    <style>
+        :root{--black:#080808;--white:#f4f4ef;--mid:#0f0f0f;--border:#1c1c1c;--muted:#484848;--accent:#c8c8c0;}
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+        html{scroll-behavior:smooth;}
+        body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;cursor:none;}
+        .cur{width:8px;height:8px;background:var(--white);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+        .cur-ring{width:34px;height:34px;border:1px solid rgba(244,244,239,.28);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .25s,height .25s,border-color .25s;}
+        .cur-ring.xl{width:64px;height:64px;border-color:rgba(244,244,239,.5);}
+
+        /* NAV */
+        nav{position:fixed;top:0;left:0;right:0;height:64px;display:grid;grid-template-columns:220px 1fr 220px;align-items:center;padding:0 2.5rem;background:rgba(8,8,8,.97);border-bottom:1px solid var(--border);z-index:400;}
+        .nav-brand{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:5px;color:var(--white);text-decoration:none;}
+        .nav-center{display:flex;justify-content:center;gap:2.5rem;list-style:none;}
+        .nav-center a{font-size:.68rem;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;}
+        .nav-center a:hover{color:var(--white);}
+        .nav-right{display:flex;justify-content:flex-end;}
+        .nav-cta{font-size:.65rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--black);background:var(--white);text-decoration:none;padding:.5rem 1.3rem;border-radius:1px;transition:background .2s;}
+        .nav-cta:hover{background:var(--accent);}
+
+        /* TICKER */
+        .ticker{margin-top:64px;height:32px;border-bottom:1px solid var(--border);overflow:hidden;display:flex;align-items:center;}
+        .t-track{display:flex;animation:tRoll 28s linear infinite;white-space:nowrap;}
+        .t-item{font-size:.56rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);padding:0 2.4rem;border-right:1px solid var(--border);display:flex;align-items:center;height:32px;flex-shrink:0;}
+        .t-item b{color:var(--white);font-weight:500;margin-left:.4rem;}
+        @keyframes tRoll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+        /* ══ PAGE HEADER ══ */
+        .page-hdr{
+            min-height:44vh;display:flex;flex-direction:column;justify-content:flex-end;
+            padding:5rem;border-bottom:1px solid var(--border);
+            position:relative;overflow:hidden;
+        }
+        .page-hdr::before{
+            content:'HELP';position:absolute;right:-1rem;top:50%;transform:translateY(-50%);
+            font-family:'Bebas Neue',sans-serif;font-size:clamp(8rem,20vw,22rem);
+            letter-spacing:-.02em;color:rgba(244,244,239,.022);pointer-events:none;white-space:nowrap;line-height:1;
+        }
+        .ph-inner{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:flex-end;position:relative;z-index:1;}
+        .ph-eyebrow{font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:1.4rem;display:flex;align-items:center;gap:.8rem;}
+        .ph-eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--muted);}
+        .ph-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.5rem,6.5vw,7rem);line-height:.88;letter-spacing:3px;}
+        .ph-title .outline{color:transparent;-webkit-text-stroke:1.5px var(--white);}
+        .ph-right{display:flex;flex-direction:column;gap:1.4rem;padding-bottom:.3rem;}
+        .ph-desc{font-size:.86rem;color:var(--muted);line-height:1.95;max-width:400px;}
+        .ph-desc strong{color:var(--accent);font-weight:500;}
+
+        /* ══ SEARCH BAR ══ */
+        .search-bar{
+            padding:2rem 3rem;border-bottom:1px solid var(--border);
+            display:flex;align-items:center;gap:1rem;
+        }
+        .search-wrap{
+            flex:1;display:flex;align-items:center;gap:1rem;
+            border-bottom:1px solid var(--border);padding-bottom:.6rem;
+        }
+        .search-ico{font-size:1.1rem;opacity:.3;flex-shrink:0;}
+        .search-inp{
+            flex:1;background:transparent;border:none;
+            color:var(--white);font-family:'DM Sans',sans-serif;
+            font-size:1rem;outline:none;
+        }
+        .search-inp::placeholder{color:var(--muted);}
+        .search-clr{
+            background:none;border:none;color:var(--muted);
+            font-size:.65rem;letter-spacing:2px;text-transform:uppercase;
+            cursor:none;transition:color .2s;padding:.2rem .5rem;display:none;
+        }
+        .search-clr.vis{display:block;}
+        .search-clr:hover{color:var(--white);}
+        .search-results-count{font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);flex-shrink:0;}
+
+        /* ══ TOPIC CARDS ══ */
+        .topics-grid{
+            display:grid;grid-template-columns:repeat(4,1fr);
+            gap:1px;background:var(--border);
+            border-bottom:1px solid var(--border);
+        }
+        .topic-card{
+            background:var(--black);padding:2.5rem 2rem;
+            display:flex;flex-direction:column;gap:.8rem;
+            cursor:none;transition:background .25s;
+            text-decoration:none;color:var(--white);
+        }
+        .topic-card:hover{background:var(--mid);}
+        .topic-card.active{background:rgba(244,244,239,.05);}
+        .topic-icon{font-size:1.8rem;filter:grayscale(1);}
+        .topic-name{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:3px;line-height:1;}
+        .topic-desc{font-size:.7rem;color:var(--muted);line-height:1.65;}
+        .topic-count{font-size:.54rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:auto;}
+
+        /* ══ MAIN CONTENT ══ */
+        .content-wrap{
+            display:grid;grid-template-columns:280px 1fr;
+            border-bottom:1px solid var(--border);
+            align-items:start;
+        }
+
+        /* Side nav */
+        .side-nav{
+            position:sticky;top:64px;
+            border-right:1px solid var(--border);
+        }
+        .sn-section{border-bottom:1px solid var(--border);}
+        .sn-section:last-child{border-bottom:none;}
+        .sn-head{
+            padding:1rem 1.5rem;
+            font-size:.56rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);
+        }
+        .sn-link{
+            display:flex;align-items:center;justify-content:space-between;
+            padding:.75rem 1.5rem;font-size:.76rem;color:var(--muted);
+            cursor:none;background:none;border:none;width:100%;text-align:left;
+            font-family:'DM Sans',sans-serif;transition:color .2s,background .2s;
+            border-bottom:1px solid rgba(28,28,28,.5);
+        }
+        .sn-link:last-child{border-bottom:none;}
+        .sn-link:hover{color:var(--white);background:rgba(244,244,239,.03);}
+        .sn-link.active{color:var(--white);background:rgba(244,244,239,.05);}
+        .sn-arrow{font-size:.6rem;opacity:.3;}
+
+        /* Articles panel */
+        .articles-panel{padding:0;}
+
+        /* Article group */
+        .article-group{display:none;}
+        .article-group.active{display:block;}
+
+        .ag-header{
+            padding:1.5rem 2.5rem;border-bottom:1px solid var(--border);
+            display:flex;align-items:center;justify-content:space-between;
+        }
+        .ag-title{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:3px;}
+        .ag-count{font-size:.56rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+
+        /* FAQ accordion inside articles */
+        .faq-block{padding:0 2.5rem;}
+        .faq-item{border-bottom:1px solid var(--border);}
+        .faq-item:last-child{border-bottom:none;}
+        .faq-q{
+            display:flex;align-items:center;justify-content:space-between;
+            padding:1.3rem 0;cursor:none;gap:1rem;transition:color .2s;
+        }
+        .faq-q:hover{color:var(--accent);}
+        .faq-q-txt{font-size:.88rem;font-weight:500;line-height:1.3;}
+        .faq-icon{
+            width:26px;height:26px;flex-shrink:0;
+            border:1px solid var(--border);border-radius:1px;
+            display:flex;align-items:center;justify-content:center;
+            font-size:.8rem;color:var(--muted);
+            transition:background .2s,color .2s,border-color .2s;
+        }
+        .faq-item.open .faq-icon{background:var(--white);color:var(--black);border-color:var(--white);}
+        .faq-a{
+            font-size:.8rem;color:var(--muted);line-height:1.88;
+            max-height:0;overflow:hidden;
+            transition:max-height .4s cubic-bezier(.22,1,.36,1),padding .4s;
+            padding-bottom:0;
+        }
+        .faq-item.open .faq-a{max-height:500px;padding-bottom:1.5rem;}
+        .faq-a strong{color:var(--accent);font-weight:500;}
+        .faq-a a{color:var(--accent);text-decoration:none;}
+        .faq-a a:hover{text-decoration:underline;}
+
+        /* Highlight search match */
+        .hl{background:rgba(200,200,192,.15);color:var(--white);border-radius:1px;padding:0 2px;}
+
+        /* No results */
+        .no-results{
+            padding:4rem 2.5rem;text-align:center;
+            display:none;flex-direction:column;align-items:center;gap:.8rem;
+        }
+        .no-results.vis{display:flex;}
+        .no-r-ico{font-size:2.5rem;opacity:.12;}
+        .no-r-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:3px;color:var(--border);}
+        .no-r-body{font-size:.76rem;color:var(--muted);}
+
+        /* Search results list */
+        .search-results-list{display:none;padding:0 2.5rem;}
+        .search-results-list.vis{display:block;}
+        .sr-item{
+            padding:1.3rem 0;border-bottom:1px solid var(--border);
+            cursor:none;transition:background .2s;
+        }
+        .sr-item:last-child{border-bottom:none;}
+        .sr-item:hover .sr-q{color:var(--accent);}
+        .sr-topic{font-size:.52rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem;display:flex;align-items:center;gap:.4rem;}
+        .sr-topic-dot{width:4px;height:4px;border-radius:50%;background:var(--accent);}
+        .sr-q{font-size:.86rem;font-weight:500;margin-bottom:.35rem;transition:color .2s;}
+        .sr-preview{font-size:.74rem;color:var(--muted);line-height:1.65;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+
+        /* ══ QUICK LINKS STRIP ══ */
+        .quick-links{
+            display:grid;grid-template-columns:repeat(3,1fr);
+            border-bottom:1px solid var(--border);
+        }
+        .ql-card{
+            padding:2.5rem;border-right:1px solid var(--border);
+            text-decoration:none;color:var(--white);
+            display:flex;flex-direction:column;gap:.6rem;
+            transition:background .25s;
+        }
+        .ql-card:last-child{border-right:none;}
+        .ql-card:hover{background:var(--mid);}
+        .ql-icon{font-size:1.4rem;filter:grayscale(1);}
+        .ql-title{font-size:.9rem;font-weight:600;}
+        .ql-desc{font-size:.72rem;color:var(--muted);line-height:1.65;}
+        .ql-arrow{font-size:.65rem;color:var(--muted);margin-top:auto;}
+
+        /* ══ CONTACT STRIP ══ */
+        .contact-strip{
+            display:grid;grid-template-columns:repeat(3,1fr);
+            border-bottom:1px solid var(--border);
+        }
+        .cs-block{
+            padding:2.5rem;border-right:1px solid var(--border);
+            transition:background .25s;
+        }
+        .cs-block:last-child{border-right:none;}
+        .cs-block:hover{background:var(--mid);}
+        .cs-icon{font-size:1.2rem;filter:grayscale(1);margin-bottom:.6rem;}
+        .cs-title{font-size:.84rem;font-weight:600;margin-bottom:.3rem;}
+        .cs-body{font-size:.72rem;color:var(--muted);line-height:1.65;margin-bottom:1rem;}
+        .cs-btn{
+            display:inline-flex;align-items:center;gap:.5rem;
+            font-size:.6rem;letter-spacing:2px;text-transform:uppercase;
+            color:var(--black);background:var(--white);
+            padding:.45rem 1rem;border-radius:1px;text-decoration:none;
+            border:none;cursor:none;font-family:'DM Sans',sans-serif;font-weight:700;
+            transition:background .2s;
+        }
+        .cs-btn:hover{background:var(--accent);}
+        .cs-btn-ghost{
+            display:inline-flex;align-items:center;gap:.5rem;
+            font-size:.6rem;letter-spacing:2px;text-transform:uppercase;
+            color:var(--white);background:transparent;
+            padding:.45rem 1rem;border-radius:1px;text-decoration:none;
+            border:1px solid var(--border);cursor:none;font-family:'DM Sans',sans-serif;font-weight:600;
+            transition:border-color .2s;
+        }
+        .cs-btn-ghost:hover{border-color:var(--accent);}
+
+        /* FOOTER */
+        footer{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--border);}
+        .fl{padding:3.5rem 4rem;border-right:1px solid var(--border);}
+        .fl-brand{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:6px;margin-bottom:.6rem;}
+        .fl-tag{font-size:.72rem;color:var(--muted);line-height:1.8;}
+        .fr{display:grid;grid-template-columns:1fr 1fr;}
+        .fc{padding:3.5rem 2.5rem;border-right:1px solid var(--border);}
+        .fc:last-child{border-right:none;}
+        .fc-t{font-size:.56rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:1.2rem;}
+        .fc ul{list-style:none;display:flex;flex-direction:column;gap:.7rem;}
+        .fc a{font-size:.76rem;color:var(--white);text-decoration:none;opacity:.38;transition:opacity .2s;}
+        .fc a:hover{opacity:1;}
+        .fbot{padding:1.2rem 4rem;display:flex;justify-content:space-between;border-top:1px solid var(--border);}
+        .fbot p{font-size:.58rem;color:var(--muted);letter-spacing:1px;}
+
+        .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease;}
+        .reveal.visible{opacity:1;transform:translateY(0);}
+
+        ::-webkit-scrollbar{width:3px;}
+        ::-webkit-scrollbar-track{background:var(--black);}
+        ::-webkit-scrollbar-thumb{background:var(--border);}
+
+        @media(max-width:1024px){
+            nav{grid-template-columns:auto 1fr auto;padding:0 1.2rem;}
+            .page-hdr{padding:3rem 2rem;}
+            .ph-inner{grid-template-columns:1fr;gap:2rem;}
+            .topics-grid{grid-template-columns:1fr 1fr;}
+            .content-wrap{grid-template-columns:1fr;}
+            .side-nav{position:static;border-right:none;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;}
+            .sn-section{border-bottom:none;flex:1;min-width:140px;}
+            .quick-links{grid-template-columns:1fr;}
+            .contact-strip{grid-template-columns:1fr;}
+            .cs-block{border-right:none;border-bottom:1px solid var(--border);}
+            .cs-block:last-child{border-bottom:none;}
+            footer{grid-template-columns:1fr;}
+            .fl{border-right:none;border-bottom:1px solid var(--border);}
+            .fbot{flex-direction:column;gap:.4rem;}
+            .search-bar{padding:1.5rem;}
+        }
+        @media(max-width:600px){
+            .topics-grid{grid-template-columns:1fr;}
+        }
+    </style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+<div class="cur-ring" id="cur-ring"></div>
+
+<!-- NAV -->
+<nav>
+    <div><a href="index.html" class="nav-brand"><img src="data:image/png;base64,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" alt="Ascend" style="height:28px;width:auto;object-fit:contain;display:inline-block;vertical-align:middle;margin-right:6px;">ASCEND</a></div>
+    <ul class="nav-center">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-right"><a href="shop.html" class="nav-cta">Shop Now</a></div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker"><div class="t-track" id="t-track"></div></div>
+
+<!-- PAGE HEADER -->
+<div class="page-hdr">
+    <div class="ph-inner">
+        <div>
+            <p class="ph-eyebrow">Ascend × breathdivinity — Support</p>
+            <h1 class="ph-title">HELP<br><span class="outline">CENTER.</span></h1>
+        </div>
+        <div class="ph-right">
+            <p class="ph-desc">
+                Everything you need to know about ordering, shipping, sizing, returns, and more.
+                <strong>Find your answer fast — or reach out and we'll sort it for you.</strong>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- SEARCH BAR -->
+<div class="search-bar">
+    <div class="search-wrap">
+        <span class="search-ico">🔍</span>
+        <input type="text" class="search-inp" id="search-inp" placeholder="Search for anything — shipping, sizing, returns, payment…" autocomplete="off">
+        <button class="search-clr" id="search-clr" onclick="clearSearch()">Clear ✕</button>
+    </div>
+    <span class="search-results-count" id="search-count"></span>
+</div>
+
+<!-- TOPIC CARDS -->
+<div class="topics-grid reveal" id="topics-grid">
+    <div class="topic-card active" onclick="showTopic('orders')" data-topic="orders">
+        <div class="topic-icon">🛒</div>
+        <div class="topic-name">Orders</div>
+        <div class="topic-desc">Placing orders, tracking, modifications, and cancellations.</div>
+        <div class="topic-count">6 Articles</div>
+    </div>
+    <div class="topic-card" onclick="showTopic('shipping')" data-topic="shipping">
+        <div class="topic-icon">🚚</div>
+        <div class="topic-name">Shipping</div>
+        <div class="topic-desc">Delivery times, coverage areas, tracking, and free shipping.</div>
+        <div class="topic-count">5 Articles</div>
+    </div>
+    <div class="topic-card" onclick="showTopic('returns')" data-topic="returns">
+        <div class="topic-icon">↩️</div>
+        <div class="topic-name">Returns</div>
+        <div class="topic-desc">Return eligibility, how to request a refund or exchange.</div>
+        <div class="topic-count">5 Articles</div>
+    </div>
+    <div class="topic-card" onclick="showTopic('sizing')" data-topic="sizing">
+        <div class="topic-icon">📏</div>
+        <div class="topic-name">Sizing</div>
+        <div class="topic-desc">Size guides, how to measure, and fit advice for every category.</div>
+        <div class="topic-count">4 Articles</div>
+    </div>
+    <div class="topic-card" onclick="showTopic('payment')" data-topic="payment">
+        <div class="topic-icon">💳</div>
+        <div class="topic-name">Payment</div>
+        <div class="topic-desc">Accepted methods, promo codes, COD, GCash, and card issues.</div>
+        <div class="topic-count">5 Articles</div>
+    </div>
+    <div class="topic-card" onclick="showTopic('account')" data-topic="account">
+        <div class="topic-icon">👤</div>
+        <div class="topic-name">Account</div>
+        <div class="topic-desc">Creating an account, logging in, passwords, and preferences.</div>
+        <div class="topic-count">4 Articles</div>
+    </div>
+    <div class="topic-card" onclick="showTopic('products')" data-topic="products">
+        <div class="topic-icon">🧥</div>
+        <div class="topic-name">Products</div>
+        <div class="topic-desc">Care instructions, fabric info, and the breathdivinity collab.</div>
+        <div class="topic-count">4 Articles</div>
+    </div>
+    <div class="topic-card" onclick="showTopic('contact')" data-topic="contact">
+        <div class="topic-icon">📩</div>
+        <div class="topic-name">Contact Us</div>
+        <div class="topic-desc">How to reach our team, response times, and escalations.</div>
+        <div class="topic-count">3 Articles</div>
+    </div>
+</div>
+
+<!-- MAIN CONTENT: SIDE NAV + ARTICLES -->
+<div class="content-wrap reveal">
+
+    <!-- SIDE NAV -->
+    <div class="side-nav">
+        <div class="sn-section">
+            <div class="sn-head">Browse Topics</div>
+            <button class="sn-link active" onclick="showTopic('orders')"   data-t="orders">   Orders   <span class="sn-arrow">›</span></button>
+            <button class="sn-link"        onclick="showTopic('shipping')" data-t="shipping"> Shipping <span class="sn-arrow">›</span></button>
+            <button class="sn-link"        onclick="showTopic('returns')"  data-t="returns">  Returns  <span class="sn-arrow">›</span></button>
+            <button class="sn-link"        onclick="showTopic('sizing')"   data-t="sizing">   Sizing   <span class="sn-arrow">›</span></button>
+            <button class="sn-link"        onclick="showTopic('payment')"  data-t="payment">  Payment  <span class="sn-arrow">›</span></button>
+            <button class="sn-link"        onclick="showTopic('account')"  data-t="account">  Account  <span class="sn-arrow">›</span></button>
+            <button class="sn-link"        onclick="showTopic('products')" data-t="products"> Products <span class="sn-arrow">›</span></button>
+            <button class="sn-link"        onclick="showTopic('contact')"  data-t="contact">  Contact  <span class="sn-arrow">›</span></button>
+        </div>
+    </div>
+
+    <!-- ARTICLES PANEL -->
+    <div class="articles-panel">
+
+        <!-- SEARCH RESULTS -->
+        <div id="search-pane" style="display:none;">
+            <div class="ag-header">
+                <span class="ag-title" id="search-title">SEARCH RESULTS</span>
+                <span class="ag-count" id="search-acount"></span>
+            </div>
+            <div class="search-results-list vis" id="search-results-list"></div>
+            <div class="no-results" id="no-results">
+                <div class="no-r-ico">🔍</div>
+                <div class="no-r-title">NO RESULTS</div>
+                <div class="no-r-body">Try different keywords, or browse the topics on the left.</div>
+            </div>
+        </div>
+
+        <!-- ORDERS -->
+        <div class="article-group active" id="ag-orders">
+            <div class="ag-header"><span class="ag-title">ORDERS</span><span class="ag-count">6 Articles</span></div>
+            <div class="faq-block">
+                <div class="faq-item" data-topic="orders" data-q="How do I place an order?" data-a="Browse our shop at shop.html and add items to your cart. When you're ready, click the cart icon, then Proceed to Checkout. Follow the 4-step checkout process: cart review, shipping details, payment, and order confirmation.">
+                    <div class="faq-q"><span class="faq-q-txt">How do I place an order?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">Browse our <a href="shop.html">shop</a> and add items to your cart using the + Add to Cart button. When you're ready, open the cart drawer and click <strong>Proceed to Checkout →</strong>. Follow the 4 steps: cart review → shipping details → payment method → confirm order. You'll receive a confirmation with your order number immediately after.</p>
+                </div>
+                <div class="faq-item" data-topic="orders" data-q="Can I modify or cancel my order?" data-a="Orders can only be modified or cancelled within 1 hour of being placed, before they are packed for dispatch.">
+                    <div class="faq-q"><span class="faq-q-txt">Can I modify or cancel my order?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">Orders can be modified or cancelled <strong>within 1 hour of being placed</strong>, before they enter packing. Contact us immediately via the <a href="contact.html">contact page</a> with your order number. Once an order is packed or dispatched, it cannot be cancelled and must go through our <a href="returns.html">returns process</a>.</p>
+                </div>
+                <div class="faq-item" data-topic="orders" data-q="How do I track my order?" data-a="Once your order is dispatched, you will receive a tracking number via email or SMS.">
+                    <div class="faq-q"><span class="faq-q-txt">How do I track my order?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">Once your order is dispatched — usually within 24 hours of payment — you'll receive a <strong>tracking number via email or SMS</strong>. Use this number on your courier's website or app to track in real time. If you haven't received a tracking number after 2 business days, contact us and we'll look into it right away.</p>
+                </div>
+                <div class="faq-item" data-topic="orders" data-q="What is an order confirmation number?" data-a="Your order confirmation number starts with ASC- followed by 6 digits. Keep it handy for tracking and support.">
+                    <div class="faq-q"><span class="faq-q-txt">What is my order confirmation number?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">Your order confirmation number follows the format <strong>ASC-XXXXXX</strong> (e.g. ASC-482931). It's shown on the checkout success screen and sent to your email. Keep this number for tracking, returns, and any support queries — it's how we identify your order in our system.</p>
+                </div>
+                <div class="faq-item" data-topic="orders" data-q="Can I add items to an existing order?" data-a="We are unable to add items to an existing order once it has been placed. You would need to place a new separate order.">
+                    <div class="faq-q"><span class="faq-q-txt">Can I add items to an existing order?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">Unfortunately, we're unable to add items to an existing order once it has been placed. You'll need to place a <strong>new separate order</strong>. If your new order qualifies for free shipping (over ₱2,000 total), the discount will apply automatically at checkout.</p>
+                </div>
+                <div class="faq-item" data-topic="orders" data-q="What happens if my order is out of stock?" data-a="If an item becomes unavailable after your order is placed, we will contact you within 24 hours to offer a refund or alternative.">
+                    <div class="faq-q"><span class="faq-q-txt">What if an item I ordered is out of stock?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">In the rare event that an item becomes unavailable after your order is placed, we'll contact you via email within <strong>24 hours</strong> to offer either a full refund for that item or an alternative of similar value. The rest of your order will be fulfilled as normal.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SHIPPING -->
+        <div class="article-group" id="ag-shipping">
+            <div class="ag-header"><span class="ag-title">SHIPPING</span><span class="ag-count">5 Articles</span></div>
+            <div class="faq-block">
+                <div class="faq-item" data-topic="shipping" data-q="How long does delivery take?" data-a="Standard delivery takes 3 to 5 business days nationwide. Metro Manila orders may arrive in 1 to 3 days. Express delivery is available for Metro Manila orders placed before 10AM.">
+                    <div class="faq-q"><span class="faq-q-txt">How long does delivery take?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a"><strong>Standard delivery</strong> takes 3–5 business days nationwide. Metro Manila orders typically arrive in 1–3 days. We also offer <strong>Express Delivery</strong> for Metro Manila orders placed before 10AM — these arrive same day or next day. See our <a href="shipping-info.html">full shipping guide</a> for regional estimates.</p>
+                </div>
+                <div class="faq-item" data-topic="shipping" data-q="How much does shipping cost?" data-a="Standard shipping is 99 to 149 pesos. Orders over 2000 pesos qualify for free shipping automatically.">
+                    <div class="faq-q"><span class="faq-q-txt">How much does shipping cost?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">Standard shipping costs <strong>₱99–₱149</strong> depending on your region. Orders totaling <strong>₱2,000 or more</strong> automatically qualify for free shipping — no promo code needed, it's applied at checkout. Express delivery for Metro Manila is ₱199–₱249.</p>
+                </div>
+                <div class="faq-item" data-topic="shipping" data-q="Do you ship nationwide?" data-a="Yes, we ship to all regions of the Philippines including Luzon, Visayas, and Mindanao. Some remote island areas may have limited coverage.">
+                    <div class="faq-q"><span class="faq-q-txt">Do you ship nationwide in the Philippines?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">Yes — we ship to <strong>all regions of the Philippines</strong> including Metro Manila, Luzon, Visayas, and Mindanao. Some remote island areas (Visayas Islands, parts of BARMM) have limited courier coverage and may take longer. Check the <a href="shipping-info.html">regional delivery table</a> for specifics.</p>
+                </div>
+                <div class="faq-item" data-topic="shipping" data-q="My package says delivered but I didn't receive it." data-a="If your package is marked delivered but not received, contact us within 48 hours with your order number and tracking details.">
+                    <div class="faq-q"><span class="faq-q-txt">My package says delivered but I didn't receive it.</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">Contact us <strong>within 48 hours</strong> of the marked delivery time via the <a href="contact.html">contact page</a> with your order number and tracking details. We'll file a trace with the courier and, if the package cannot be located within 5 business days, we'll issue a full refund or reship at no cost.</p>
+                </div>
+                <div class="faq-item" data-topic="shipping" data-q="How are orders packaged?" data-a="All breathdivinity pieces are folded flat inside a sealed poly mailer with a branded inner wrap to protect the graphics.">
+                    <div class="faq-q"><span class="faq-q-txt">How are orders packaged?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">Every item is carefully folded flat and placed inside a <strong>sealed poly mailer</strong> with a branded inner wrap to protect the graphic prints during transit. Sets and multi-item orders are packed together in a single parcel unless otherwise noted.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- RETURNS -->
+        <div class="article-group" id="ag-returns">
+            <div class="ag-header"><span class="ag-title">RETURNS &amp; REFUNDS</span><span class="ag-count">5 Articles</span></div>
+            <div class="faq-block">
+                <div class="faq-item" data-topic="returns" data-q="What is your return policy?" data-a="We accept returns within 30 days of delivery for defective items, wrong items, or size exchanges. Change of mind returns are not accepted.">
+                    <div class="faq-q"><span class="faq-q-txt">What is your return policy?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">We accept returns <strong>within 30 days of delivery</strong> for: defective or damaged items, wrong item sent, and size exchanges (1× free per order). Items must be unworn, unwashed, and have original tags. Change of mind returns are not accepted. Visit the <a href="returns.html">Returns page</a> to submit a request.</p>
+                </div>
+                <div class="faq-item" data-topic="returns" data-q="How do I start a return?" data-a="Go to the Returns page and fill out the return request form with your order number, item details, reason, and photos if applicable.">
+                    <div class="faq-q"><span class="faq-q-txt">How do I start a return?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">Go to our <a href="returns.html">Returns page</a> and fill in the return request form. You'll need your <strong>order number, item details, reason for return</strong>, and photos of any defect. We'll review within 1–2 business days and email you with approval and shipping instructions.</p>
+                </div>
+                <div class="faq-item" data-topic="returns" data-q="How long does a refund take?" data-a="Once approved and item received, refunds are processed within 3 to 5 business days back to your original payment method.">
+                    <div class="faq-q"><span class="faq-q-txt">How long does a refund take?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">After we receive and inspect your returned item, refunds are processed within <strong>3–5 business days</strong>. GCash and Maya refunds are typically instant once processed. Card refunds may take an additional 5–10 business days depending on your bank.</p>
+                </div>
+                <div class="faq-item" data-topic="returns" data-q="Can I exchange for a different size?" data-a="Yes, we offer one free size exchange per order within 30 days, provided the item is unworn and has tags attached.">
+                    <div class="faq-q"><span class="faq-q-txt">Can I exchange for a different size?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">Yes — we offer <strong>1 free size exchange per order</strong> within 30 days. The item must be unworn, unwashed, and have its original tags attached. Customer pays return shipping; we cover the new item's delivery. Submit via the <a href="returns.html">Returns page</a> and select "Exchange — Different Size."</p>
+                </div>
+                <div class="faq-item" data-topic="returns" data-q="What if my item arrived damaged?" data-a="Defective or damaged items qualify for a full refund or free replacement. Contact us within 30 days with photos of the damage.">
+                    <div class="faq-q"><span class="faq-q-txt">My item arrived damaged — what do I do?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">We're sorry about that. Damaged or defective items qualify for a <strong>full refund or free replacement</strong>, and we'll cover all return shipping. Go to the <a href="returns.html">Returns page</a>, select "Defective / Damaged" as the reason, and attach clear photos. We'll resolve it fast.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SIZING -->
+        <div class="article-group" id="ag-sizing">
+            <div class="ag-header"><span class="ag-title">SIZING</span><span class="ag-count">4 Articles</span></div>
+            <div class="faq-block">
+                <div class="faq-item" data-topic="sizing" data-q="What sizes do you carry?" data-a="All breathdivinity pieces come in XS, S, M, L, XL, XXL, and 3XL.">
+                    <div class="faq-q"><span class="faq-q-txt">What sizes do you carry?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">All breathdivinity pieces are available in <strong>XS, S, M, L, XL, XXL, and 3XL</strong>. M and L are our most popular sizes. See the <a href="sizing-guide.html">size guide</a> for detailed measurements in both CM and inches across all categories — Tees, Hoodies, Longsleeved, Sweatpants, and Tanks.</p>
+                </div>
+                <div class="faq-item" data-topic="sizing" data-q="How do the clothes fit?" data-a="All breathdivinity pieces are cut oversized and streetwear-fit. If you prefer a more fitted look, size down by one size.">
+                    <div class="faq-q"><span class="faq-q-txt">How do the clothes fit?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">All breathdivinity pieces are <strong>cut oversized and streetwear-fit</strong> by design — dropped shoulders, relaxed chest, and longer length. If you prefer a more structured, fitted silhouette, we recommend <strong>sizing down by one size</strong>. When in doubt, message us with your measurements.</p>
+                </div>
+                <div class="faq-item" data-topic="sizing" data-q="How do I measure myself?" data-a="Use a soft measuring tape around the fullest part of your chest, measure shoulder to shoulder across the back, and from shoulder to hem for length.">
+                    <div class="faq-q"><span class="faq-q-txt">How do I measure myself correctly?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">Use a soft measuring tape: <strong>Chest</strong> — wrap around the fullest part, parallel to the floor. <strong>Shoulder</strong> — across your back from seam to seam. <strong>Length</strong> — from highest shoulder point to hem. <strong>Waist / Hip</strong> — for sweatpants, measure at the narrowest and fullest points respectively. Full guide at <a href="sizing-guide.html">sizing-guide.html</a>.</p>
+                </div>
+                <div class="faq-item" data-topic="sizing" data-q="I'm between sizes — what should I do?" data-a="If you're between sizes, go with the larger size for the intended oversized streetwear fit, or the smaller size for a more fitted look.">
+                    <div class="faq-q"><span class="faq-q-txt">I'm between two sizes — which should I pick?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">If you're between sizes, pick the <strong>larger size for the oversized streetwear look</strong> the collection is designed for, or the smaller size if you want it more fitted. Still unsure? Message us on the <a href="contact.html">contact page</a> with your chest and shoulder measurements and we'll recommend the best size.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAYMENT -->
+        <div class="article-group" id="ag-payment">
+            <div class="ag-header"><span class="ag-title">PAYMENT</span><span class="ag-count">5 Articles</span></div>
+            <div class="faq-block">
+                <div class="faq-item" data-topic="payment" data-q="What payment methods do you accept?" data-a="We accept Cash on Delivery, GCash, Maya, and Visa or Mastercard credit and debit cards.">
+                    <div class="faq-q"><span class="faq-q-txt">What payment methods do you accept?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">We accept <strong>Cash on Delivery (COD), GCash, Maya</strong>, and all major <strong>credit and debit cards</strong> (Visa, Mastercard). Select your preferred method at checkout — no account needed for COD. GCash and Maya payment numbers are sent in your order confirmation email.</p>
+                </div>
+                <div class="faq-item" data-topic="payment" data-q="How do I use a promo code?" data-a="Enter your promo code in the discount field at checkout. Valid codes include ASCEND10, BD10, JUSTASCEND, and BREATHDIVINITY for 10% off.">
+                    <div class="faq-q"><span class="faq-q-txt">How do I use a promo code?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">On the checkout page, enter your promo code in the <strong>promo code field</strong> in the order summary panel and click Apply. Valid codes: <strong>ASCEND10, BD10, JUSTASCEND, BREATHDIVINITY</strong> — all give 10% off your order total. Only one promo code can be applied per order.</p>
+                </div>
+                <div class="faq-item" data-topic="payment" data-q="Is Cash on Delivery available everywhere?" data-a="COD is available in most areas of the Philippines. Some remote island areas may not support COD. Check at checkout.">
+                    <div class="faq-q"><span class="faq-q-txt">Is Cash on Delivery available everywhere?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">COD is available in most areas across the Philippines, including Metro Manila, major cities in Luzon, Visayas, and Mindanao. Some <strong>remote island areas and parts of BARMM</strong> may not support COD. Availability will be confirmed at checkout based on your delivery address.</p>
+                </div>
+                <div class="faq-item" data-topic="payment" data-q="My payment failed — what should I do?" data-a="If your payment fails, try a different payment method or contact your bank. Your order will not be confirmed until payment is successful.">
+                    <div class="faq-q"><span class="faq-q-txt">My payment failed — what should I do?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">If your card payment fails, check with your bank that the card is enabled for online transactions. Try a different card or switch to GCash or Maya. Your order will <strong>not be placed until payment is successfully confirmed</strong>. If you're still having issues, <a href="contact.html">contact us</a> and we'll help manually.</p>
+                </div>
+                <div class="faq-item" data-topic="payment" data-q="Is it safe to pay online?" data-a="Yes. All card payments are processed securely. We do not store card details on our servers.">
+                    <div class="faq-q"><span class="faq-q-txt">Is it safe to pay online on Ascend?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">Yes — all card payments are processed through a <strong>secure encrypted payment gateway</strong>. We never store your card details on our servers. GCash and Maya payments are also processed through their own secure platforms. Your payment information is always safe with us.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACCOUNT -->
+        <div class="article-group" id="ag-account">
+            <div class="ag-header"><span class="ag-title">ACCOUNT</span><span class="ag-count">4 Articles</span></div>
+            <div class="faq-block">
+                <div class="faq-item" data-topic="account" data-q="Do I need an account to shop?" data-a="No, you can checkout as a guest. However, creating an account lets you track orders faster and access order history.">
+                    <div class="faq-q"><span class="faq-q-txt">Do I need an account to shop?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">No — you can shop and check out as a <strong>guest</strong> without creating an account. However, creating a free account gives you faster checkout, order history access, and early notifications for new drops. Create one at <a href="login.html">login.html</a>.</p>
+                </div>
+                <div class="faq-item" data-topic="account" data-q="How do I create an account?" data-a="Visit the login page and click Create Account. Fill in your name, email, and password to get started.">
+                    <div class="faq-q"><span class="faq-q-txt">How do I create an account?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">Visit our <a href="login.html">login page</a> and click <strong>Create Account</strong>. Enter your first and last name, email address, and a password (minimum 8 characters). You'll be logged in instantly. You can optionally opt in to receive early access to new drops and exclusive offers.</p>
+                </div>
+                <div class="faq-item" data-topic="account" data-q="I forgot my password — how do I reset it?" data-a="On the login page, click Forgot password? and enter your email. You'll receive a reset link within a few minutes.">
+                    <div class="faq-q"><span class="faq-q-txt">I forgot my password — how do I reset it?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">On the <a href="login.html">login page</a>, click <strong>Forgot password?</strong> below the password field. Enter your registered email address and we'll send a password reset link within a few minutes. Check your spam folder if it doesn't arrive.</p>
+                </div>
+                <div class="faq-item" data-topic="account" data-q="How do I opt in or out of marketing emails?" data-a="You can manage email preferences during registration or by contacting us directly to update your subscription status.">
+                    <div class="faq-q"><span class="faq-q-txt">How do I manage marketing emails?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">During registration, you can tick the checkbox to receive early access to drops and exclusive offers. To opt out at any time, simply <a href="contact.html">contact us</a> with your email address and we'll remove you from our marketing list within 2 business days. Order confirmation emails cannot be unsubscribed from.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRODUCTS -->
+        <div class="article-group" id="ag-products">
+            <div class="ag-header"><span class="ag-title">PRODUCTS</span><span class="ag-count">4 Articles</span></div>
+            <div class="faq-block">
+                <div class="faq-item" data-topic="products" data-q="How do I wash my breathdivinity clothes?" data-a="Machine wash cold, inside out, on gentle cycle. Hang dry or tumble dry on low. Do not bleach or iron directly on prints.">
+                    <div class="faq-q"><span class="faq-q-txt">How should I wash my breathdivinity pieces?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">To keep your pieces looking sharp: <strong>Machine wash cold, inside out, gentle cycle.</strong> Hang dry or tumble dry on low heat. <strong>Do not bleach.</strong> Do not iron directly on printed areas — use a cloth between the iron and print. Following these instructions keeps graphics crisp and fabric quality intact.</p>
+                </div>
+                <div class="faq-item" data-topic="products" data-q="What is the breathdivinity collab?" data-a="breathdivinity is a US-based gothic streetwear brand. Ascend is the exclusive Philippine partner bringing their collection to Filipino fans.">
+                    <div class="faq-q"><span class="faq-q-txt">What is the breathdivinity × Ascend collab?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a"><strong>breathdivinity</strong> is a gothic streetwear brand born in the streets of the USA, known for bold skull graphics, oversized silhouettes, and dark aesthetic. <strong>Ascend</strong> is the exclusive Philippine partner — bringing authentic breathdivinity pieces directly to Filipino athletes and streetwear fans. From the USA, straight to PH. 🇺🇸→🇵🇭</p>
+                </div>
+                <div class="faq-item" data-topic="products" data-q="What are the clothes made of?" data-a="breathdivinity pieces use premium heavyweight cotton blends. The exact fabric weight varies by category — hoodies are heavier, tees are mid-weight.">
+                    <div class="faq-q"><span class="faq-q-txt">What are the clothes made of?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">breathdivinity uses <strong>premium heavyweight cotton blends</strong> across all categories. Hoodies and longsleeved pieces are heavier weight for durability and structure. Tees and tanks use mid-weight cotton for comfort and breathability. Exact fabric composition varies by piece — message us for specific details on an item.</p>
+                </div>
+                <div class="faq-item" data-topic="products" data-q="Will sold-out items be restocked?" data-a="Popular items are restocked periodically. Follow our social media or opt in to notifications to be alerted when items return.">
+                    <div class="faq-q"><span class="faq-q-txt">Will sold-out items be restocked?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">Yes — popular items are restocked periodically depending on availability from breathdivinity USA. To be notified when a specific item returns, <a href="contact.html">contact us</a> and let us know which piece and size you're waiting for. We'll reach out as soon as stock is available.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTACT INFO -->
+        <div class="article-group" id="ag-contact">
+            <div class="ag-header"><span class="ag-title">CONTACT US</span><span class="ag-count">3 Articles</span></div>
+            <div class="faq-block">
+                <div class="faq-item" data-topic="contact" data-q="How do I contact Ascend support?" data-a="You can reach us via the contact page form or by messaging us directly. We respond within 24 hours.">
+                    <div class="faq-q"><span class="faq-q-txt">How do I contact Ascend support?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">The fastest way to reach us is through our <a href="contact.html">contact page</a> — fill in the form and we'll respond within <strong>24 hours</strong>, Monday to Saturday. For returns specifically, use the <a href="returns.html">returns form</a>. For urgent order issues, mention your order number in the subject line.</p>
+                </div>
+                <div class="faq-item" data-topic="contact" data-q="What are your support hours?" data-a="Our team responds Monday to Saturday, 9AM to 6PM Philippine Standard Time. Weekend messages are answered the following Monday.">
+                    <div class="faq-q"><span class="faq-q-txt">What are your support hours?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">Our support team operates <strong>Monday to Saturday, 9AM–6PM Philippine Standard Time (PST/GMT+8)</strong>. Messages sent on Sundays or public holidays will be answered on the next business day. We aim to respond to all inquiries within 24 hours.</p>
+                </div>
+                <div class="faq-item" data-topic="contact" data-q="Where is Ascend based?" data-a="Ascend is based in Manila, Philippines. We dispatch all orders from Manila within 24 hours of payment.">
+                    <div class="faq-q"><span class="faq-q-txt">Where is Ascend based?</span><div class="faq-icon">+</div></div>
+                    <p class="faq-a">Ascend is based in <strong>Manila, Philippines</strong> 🇵🇭. All orders are dispatched from Manila within 24 hours of payment confirmation. Our partner brand breathdivinity is based in the USA — together we bring their collection directly to Filipino streetwear fans.</p>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /articles-panel -->
+</div><!-- /content-wrap -->
+
+<!-- QUICK LINKS -->
+<div class="quick-links reveal">
+    <a href="shipping-info.html" class="ql-card">
+        <div class="ql-icon">🚚</div>
+        <div class="ql-title">Shipping Info</div>
+        <div class="ql-desc">Delivery times, regional coverage, costs, and payment methods.</div>
+        <div class="ql-arrow">View shipping guide →</div>
+    </a>
+    <a href="sizing-guide.html" class="ql-card">
+        <div class="ql-icon">📏</div>
+        <div class="ql-title">Size Guide</div>
+        <div class="ql-desc">Full measurement charts for all categories in CM and inches.</div>
+        <div class="ql-arrow">View size guide →</div>
+    </a>
+    <a href="returns.html" class="ql-card">
+        <div class="ql-icon">↩️</div>
+        <div class="ql-title">Returns & Refunds</div>
+        <div class="ql-desc">Return policy, eligibility, and submit a return request online.</div>
+        <div class="ql-arrow">View returns policy →</div>
+    </a>
+</div>
+
+<!-- CONTACT STRIP -->
+<div class="contact-strip reveal">
+    <div class="cs-block">
+        <div class="cs-icon">💬</div>
+        <div class="cs-title">Send a Message</div>
+        <div class="cs-body">Fill out our contact form and we'll get back to you within 24 hours, Monday to Saturday.</div>
+        <a href="contact.html" class="cs-btn">Go to Contact →</a>
+    </div>
+    <div class="cs-block">
+        <div class="cs-icon">↩️</div>
+        <div class="cs-title">Start a Return</div>
+        <div class="cs-body">Have a defective item, wrong size, or wrong item? Submit your return request online.</div>
+        <a href="returns.html" class="cs-btn">Submit Return →</a>
+    </div>
+    <div class="cs-block">
+        <div class="cs-icon">🛍️</div>
+        <div class="cs-title">Browse the Shop</div>
+        <div class="cs-body">Still looking for the right piece? Explore the full breathdivinity × Ascend collection.</div>
+        <a href="shop.html" class="cs-btn-ghost">Shop Now →</a>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <div class="fl">
+        <div class="fl-brand">ASCEND</div>
+        <p class="fl-tag">Premium gymwear & streetwear.<br>From the USA, for the Philippines. 🇺🇸→🇵🇭</p>
+    </div>
+    <div class="fr">
+        <div class="fc">
+            <p class="fc-t">Navigate</p>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+        <div class="fc">
+            <p class="fc-t">Support</p>
+            <ul>
+                <li><a href="help.html">Help Center</a></li>
+                <li><a href="returns.html">Returns</a></li>
+                <li><a href="shipping-info.html">Shipping</a></li>
+                <li><a href="sizing-guide.html">Size Guide</a></li>
+            </ul>
+        </div>
+    </div>
+</footer>
+<div class="fbot">
+    <p>© 2026 Ascend Gymwear. All rights reserved.</p>
+    <p>Ascend x breathdivinity — From USA, For PH. 🇵🇭</p>
+</div>
+
+<script>
+/* CURSOR */
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function t(){cur.style.left=mx+'px';cur.style.top=my+'px';rx+=(mx-rx)*.13;ry+=(my-ry)*.13;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(t);})();
+document.addEventListener('mouseover',e=>ring.classList.toggle('xl',!!e.target.closest('a,button,.topic-card,.ql-card,.cs-block,.faq-item')));
+
+/* TICKER */
+[['Help Center','Find Your Answer'],['Response Time','Within 24 Hours'],
+ ['Return Window','30 Days'],['Free Shipping','Orders Over ₱2,000'],
+ ['Sizes','XS to 3XL'],['Support','Mon-Sat 9AM-6PM PST'],
+].flatMap(x=>[x,x]).forEach(([l,v])=>{
+    const d=document.createElement('div');d.className='t-item';
+    d.innerHTML=`${l} <b>${v}</b>`;
+    document.getElementById('t-track').appendChild(d);
+});
+
+/* ── TOPIC SWITCHING ── */
+function showTopic(topic) {
+    // Update topic cards
+    document.querySelectorAll('.topic-card').forEach(c => {
+        c.classList.toggle('active', c.dataset.topic === topic);
+    });
+    // Update side nav
+    document.querySelectorAll('.sn-link').forEach(l => {
+        l.classList.toggle('active', l.dataset.t === topic);
+    });
+    // Show article group
+    document.querySelectorAll('.article-group').forEach(g => g.classList.remove('active'));
+    const target = document.getElementById('ag-' + topic);
+    if (target) target.classList.add('active');
+
+    // Hide search pane
+    document.getElementById('search-pane').style.display = 'none';
+    document.getElementById('search-inp').value = '';
+    document.getElementById('search-clr').classList.remove('vis');
+    document.getElementById('search-count').textContent = '';
+
+    // Scroll to content
+    document.querySelector('.content-wrap').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+/* ── FAQ ACCORDION ── */
+document.addEventListener('click', e => {
+    const q = e.target.closest('.faq-q');
+    if (!q) return;
+    const item = q.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    // Close all in same block
+    const block = item.closest('.faq-block, .search-results-list');
+    if (block) {
+        block.querySelectorAll('.faq-item').forEach(i => {
+            i.classList.remove('open');
+            i.querySelector('.faq-icon').textContent = '+';
+        });
+    }
+    if (!isOpen) {
+        item.classList.add('open');
+        item.querySelector('.faq-icon').textContent = '-';
+    }
+});
+
+/* ── SEARCH ── */
+// Build searchable data from all faq-items
+const allArticles = [];
+document.querySelectorAll('.faq-item[data-q]').forEach(item => {
+    allArticles.push({
+        topic: item.dataset.topic,
+        q:     item.dataset.q,
+        a:     item.dataset.a,
+        el:    item
+    });
+});
+
+const searchInp = document.getElementById('search-inp');
+const searchClr = document.getElementById('search-clr');
+const searchPane = document.getElementById('search-pane');
+const searchList = document.getElementById('search-results-list');
+const noResults  = document.getElementById('no-results');
+const searchCount= document.getElementById('search-count');
+const searchAcount=document.getElementById('search-acount');
+
+function highlight(text, query) {
+    if (!query) return text;
+    const re = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+    return text.replace(re, '<span class="hl">$1</span>');
+}
+
+function topicLabel(t) {
+    const map = {orders:'Orders',shipping:'Shipping',returns:'Returns',sizing:'Sizing',payment:'Payment',account:'Account',products:'Products',contact:'Contact'};
+    return map[t] || t;
+}
+
+function doSearch(query) {
+    query = query.trim();
+    if (!query) {
+        clearSearch();
+        return;
+    }
+
+    searchClr.classList.add('vis');
+    const q = query.toLowerCase();
+    const matches = allArticles.filter(a =>
+        a.q.toLowerCase().includes(q) || a.a.toLowerCase().includes(q) || a.topic.toLowerCase().includes(q)
+    );
+
+    // Show search pane, hide all article groups
+    document.querySelectorAll('.article-group').forEach(g => g.classList.remove('active'));
+    document.querySelectorAll('.topic-card').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.sn-link').forEach(l => l.classList.remove('active'));
+    searchPane.style.display = 'block';
+
+    searchCount.textContent = matches.length ? matches.length + ' result' + (matches.length !== 1 ? 's' : '') : '';
+    searchAcount.textContent = matches.length + ' result' + (matches.length !== 1 ? 's' : '');
+
+    if (!matches.length) {
+        searchList.classList.remove('vis');
+        noResults.classList.add('vis');
+        return;
+    }
+
+    noResults.classList.remove('vis');
+    searchList.classList.add('vis');
+    searchList.innerHTML = '';
+
+    matches.forEach(art => {
+        const div = document.createElement('div');
+        div.className = 'sr-item';
+        const previewText = art.a.length > 160 ? art.a.substring(0, 160) + '…' : art.a;
+        div.innerHTML = `
+            <div class="sr-topic"><div class="sr-topic-dot"></div>${topicLabel(art.topic)}</div>
+            <div class="sr-q">${highlight(art.q, query)}</div>
+            <div class="sr-preview">${highlight(previewText, query)}</div>`;
+        // Click to open that topic and expand that question
+        div.addEventListener('click', () => {
+            clearSearch();
+            showTopic(art.topic);
+            setTimeout(() => {
+                const el = art.el;
+                el.classList.add('open');
+                el.querySelector('.faq-icon').textContent = '-';
+                el.scrollIntoView({behavior:'smooth', block:'center'});
+            }, 350);
+        });
+        searchList.appendChild(div);
+    });
+}
+
+function clearSearch() {
+    searchInp.value = '';
+    searchClr.classList.remove('vis');
+    searchCount.textContent = '';
+    searchPane.style.display = 'none';
+    searchList.innerHTML = '';
+    noResults.classList.remove('vis');
+    // Restore first topic
+    const firstActive = document.querySelector('.sn-link.active');
+    if (!firstActive) showTopic('orders');
+    else {
+        const t = firstActive.dataset.t;
+        const ag = document.getElementById('ag-' + t);
+        if (ag) ag.classList.add('active');
+    }
+}
+
+let searchTimer;
+searchInp.addEventListener('input', e => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => doSearch(e.target.value), 220);
+});
+searchInp.addEventListener('keydown', e => {
+    if (e.key === 'Escape') clearSearch();
+});
+
+/* SCROLL REVEAL */
+const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+},{threshold:.05});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

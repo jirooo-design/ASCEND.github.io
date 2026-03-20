@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="AscendLogo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | Ascend × breathdivinity</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black:#080808; --white:#f4f4ef; --mid:#0f0f0f;
+            --border:#1c1c1c; --muted:#484848; --accent:#c8c8c0;
+        }
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+        html{scroll-behavior:smooth;}
+        body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;cursor:none;}
+
+        /* CURSOR */
+        .cur{width:8px;height:8px;background:var(--white);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+        .cur-ring{width:34px;height:34px;border:1px solid rgba(244,244,239,.28);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .25s,height .25s,border-color .25s;}
+        .cur-ring.xl{width:64px;height:64px;border-color:rgba(244,244,239,.5);}
+
+        /* NAV */
+        nav{position:fixed;top:0;left:0;right:0;height:64px;display:grid;grid-template-columns:220px 1fr 220px;align-items:center;padding:0 2.5rem;background:rgba(8,8,8,.97);border-bottom:1px solid var(--border);z-index:400;}
+        .nav-brand{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:5px;color:var(--white);text-decoration:none;}
+        .nav-center{display:flex;justify-content:center;gap:2.5rem;list-style:none;}
+        .nav-center a{font-size:.68rem;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;}
+        .nav-center a:hover,.nav-center a.active{color:var(--white);}
+        .nav-right{display:flex;justify-content:flex-end;}
+        .nav-cta{font-size:.65rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--black);background:var(--white);text-decoration:none;padding:.5rem 1.3rem;border-radius:1px;transition:background .2s;}
+        .nav-cta:hover{background:var(--accent);}
+
+        /* TICKER */
+        .ticker{margin-top:64px;height:32px;border-bottom:1px solid var(--border);overflow:hidden;display:flex;align-items:center;}
+        .t-track{display:flex;animation:tRoll 28s linear infinite;white-space:nowrap;}
+        .t-item{font-size:.56rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);padding:0 2.4rem;border-right:1px solid var(--border);display:flex;align-items:center;height:32px;flex-shrink:0;}
+        .t-item b{color:var(--white);font-weight:500;margin-left:.4rem;}
+        @keyframes tRoll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+        /* ══ PAGE HEADER ══ */
+        .page-header{
+            min-height:42vh;display:flex;flex-direction:column;justify-content:flex-end;
+            padding:5rem;border-bottom:1px solid var(--border);
+            position:relative;overflow:hidden;
+        }
+        .page-header::before{
+            content:'SUPPORT';
+            position:absolute;right:-1rem;top:50%;transform:translateY(-50%);
+            font-family:'Bebas Neue',sans-serif;
+            font-size:clamp(6rem,16vw,18rem);
+            letter-spacing:-.02em;color:rgba(244,244,239,.022);
+            pointer-events:none;white-space:nowrap;line-height:1;
+        }
+        .ph-inner{
+            display:grid;grid-template-columns:1fr 1fr;
+            gap:4rem;align-items:flex-end;position:relative;z-index:1;
+        }
+        .ph-eyebrow{font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:1.4rem;display:flex;align-items:center;gap:.8rem;}
+        .ph-eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--muted);}
+        .ph-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.5rem,6.5vw,7rem);line-height:.88;letter-spacing:3px;}
+        .ph-title .outline{color:transparent;-webkit-text-stroke:1.5px var(--white);}
+        .ph-right{display:flex;flex-direction:column;gap:1.2rem;padding-bottom:.3rem;}
+        .ph-desc{font-size:.86rem;color:var(--muted);line-height:1.95;max-width:400px;}
+        .ph-desc strong{color:var(--accent);font-weight:500;}
+        .ph-meta{display:flex;gap:2.5rem;}
+        .ph-meta-item{display:flex;flex-direction:column;gap:.2rem;}
+        .ph-meta-label{font-size:.52rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);}
+        .ph-meta-value{font-size:.85rem;font-weight:500;}
+
+        /* ══ MAIN CONTENT GRID ══ */
+        .content-grid{
+            display:grid;grid-template-columns:1fr 1fr;
+            background:var(--border);gap:1px;
+            border-bottom:1px solid var(--border);
+        }
+
+        /* ── LEFT: FAQ ── */
+        .faq-col{background:var(--black);padding:4rem;}
+        .col-label{font-size:.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:2rem;display:flex;align-items:center;gap:.7rem;}
+        .col-label::before{content:'';display:block;width:20px;height:1px;background:var(--muted);}
+        .col-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:3px;line-height:1;margin-bottom:2.5rem;}
+
+        .faq-item{border-bottom:1px solid var(--border);cursor:none;}
+        .faq-item:last-child{border-bottom:none;}
+        .faq-q{
+            display:flex;align-items:center;justify-content:space-between;
+            padding:1.2rem 0;gap:1rem;
+            transition:color .2s;
+        }
+        .faq-q:hover{color:var(--accent);}
+        .faq-q-text{font-size:.85rem;font-weight:500;letter-spacing:.3px;}
+        .faq-icon{
+            width:24px;height:24px;flex-shrink:0;
+            border:1px solid var(--border);border-radius:1px;
+            display:flex;align-items:center;justify-content:center;
+            font-size:.75rem;color:var(--muted);
+            transition:background .2s,color .2s,border-color .2s;
+        }
+        .faq-item.open .faq-icon{background:var(--white);color:var(--black);border-color:var(--white);}
+        .faq-a{
+            font-size:.8rem;color:var(--muted);line-height:1.85;
+            max-height:0;overflow:hidden;
+            transition:max-height .35s cubic-bezier(.22,1,.36,1),padding .35s;
+            padding-bottom:0;
+        }
+        .faq-item.open .faq-a{max-height:200px;padding-bottom:1.2rem;}
+
+        /* ── RIGHT: CONTACT FORM ── */
+        .form-col{background:var(--black);padding:4rem;}
+
+        .form-group{margin-bottom:1.5rem;}
+        .form-label{font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:.6rem;}
+        .form-input{
+            width:100%;background:transparent;
+            border:none;border-bottom:1px solid var(--border);
+            color:var(--white);font-family:'DM Sans',sans-serif;
+            font-size:.88rem;padding:.7rem 0;
+            outline:none;transition:border-color .25s;
+            border-radius:0;
+        }
+        .form-input:focus{border-bottom-color:var(--accent);}
+        .form-input::placeholder{color:var(--muted);font-size:.82rem;}
+        textarea.form-input{resize:none;min-height:100px;padding-top:.5rem;}
+
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+
+        .submit-btn{
+            display:flex;align-items:center;justify-content:space-between;
+            width:100%;margin-top:2rem;
+            background:var(--white);color:var(--black);
+            border:none;padding:1rem 1.5rem;
+            font-family:'DM Sans',sans-serif;font-size:.68rem;
+            font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
+            border-radius:1px;cursor:none;
+            transition:background .2s,transform .2s;
+        }
+        .submit-btn:hover{background:var(--accent);transform:translateY(-2px);}
+        .submit-btn-arrow{font-size:1rem;}
+
+        /* Success state */
+        .form-success{
+            display:none;
+            padding:2rem;border:1px solid var(--border);border-radius:1px;
+            text-align:center;margin-top:1.5rem;
+        }
+        .form-success.visible{display:block;}
+        .form-success-icon{font-size:2rem;margin-bottom:.8rem;filter:grayscale(1);}
+        .form-success-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:3px;margin-bottom:.5rem;}
+        .form-success-body{font-size:.78rem;color:var(--muted);line-height:1.8;}
+
+        /* ══ CONTACT INFO STRIP ══ */
+        .info-strip{
+            display:grid;grid-template-columns:repeat(3,1fr);
+            border-bottom:1px solid var(--border);
+        }
+        .info-block{
+            padding:2rem 2.5rem;border-right:1px solid var(--border);
+            display:flex;flex-direction:column;gap:.4rem;
+            transition:background .25s;
+        }
+        .info-block:last-child{border-right:none;}
+        .info-block:hover{background:var(--mid);}
+        .info-icon{font-size:1.2rem;margin-bottom:.3rem;filter:grayscale(1);}
+        .info-label{font-size:.52rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);}
+        .info-value{font-size:.84rem;font-weight:500;}
+
+        /* FOOTER */
+        footer{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--border);}
+        .fl{padding:3.5rem 4rem;border-right:1px solid var(--border);}
+        .fl-brand{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:6px;margin-bottom:.6rem;}
+        .fl-tag{font-size:.72rem;color:var(--muted);line-height:1.8;}
+        .fr{display:grid;grid-template-columns:1fr 1fr;}
+        .fc{padding:3.5rem 2.5rem;border-right:1px solid var(--border);}
+        .fc:last-child{border-right:none;}
+        .fc-t{font-size:.56rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:1.2rem;}
+        .fc ul{list-style:none;display:flex;flex-direction:column;gap:.7rem;}
+        .fc a{font-size:.76rem;color:var(--white);text-decoration:none;opacity:.38;transition:opacity .2s;}
+        .fc a:hover{opacity:1;}
+        .fbot{padding:1.2rem 4rem;display:flex;justify-content:space-between;border-top:1px solid var(--border);}
+        .fbot p{font-size:.58rem;color:var(--muted);letter-spacing:1px;}
+
+        .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease;}
+        .reveal.visible{opacity:1;transform:translateY(0);}
+
+        ::-webkit-scrollbar{width:3px;}
+        ::-webkit-scrollbar-track{background:var(--black);}
+        ::-webkit-scrollbar-thumb{background:var(--border);}
+
+        @media(max-width:960px){
+            nav{grid-template-columns:auto 1fr auto;padding:0 1.2rem;}
+            .page-header{padding:3rem 2rem;}
+            .ph-inner{grid-template-columns:1fr;gap:2rem;}
+            .content-grid{grid-template-columns:1fr;}
+            .faq-col,.form-col{padding:3rem 2rem;}
+            .form-row{grid-template-columns:1fr;}
+            .info-strip{grid-template-columns:1fr;}
+            .info-block{border-right:none;border-bottom:1px solid var(--border);}
+            footer{grid-template-columns:1fr;}
+            .fl{border-right:none;border-bottom:1px solid var(--border);}
+            .fbot{flex-direction:column;gap:.4rem;}
+        }
+    </style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+<div class="cur-ring" id="cur-ring"></div>
+
+<!-- NAV -->
+<nav>
+    <div><a href="index.html" class="nav-brand"><img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAD1AQkDASIAAhEBAxEB/8QAHQABAAEFAQEBAAAAAAAAAAAAAAgDBQYHCQQBAv/EAD4QAAEDAwEFBgMHAgUEAwAAAAEAAgMEBREGBxIhMUEIFFFUYZITInEJIzJCUmKBgpEVM0NygxYlU8FjodH/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8Ahx3uq8zN7yne6rzM3vKoogrd7qvMze8p3uq8zN7yqKIK3e6rzM3vKd7qvMze8qiiCt3uq8zN7yne6rzM3vKoogrd7qvMze8p3uq8zN7yqKIK3e6rzM3vKd7qvMze8qiiCt3uq8zN7yne6rzM3vKoogrd7qvMze8p3uq8zN7yqKIK3e6rzM3vKd7qvMze8qiiCt3uq8zN7yne6rzM3vKoogrd7qvMze8p3uq8zN7yqKIK3e6rzM3vKd7qvMze8qiiCt3uq8zN7yne6rzM3vKoogrd7qvMze8p3uq8zN7yqKIK3e6rzM3vKd7qvMze8qiiCt3uq8zN7yne6rzM3vKoogrd7qvMze8p3uq8zN7yqKICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICLINn2jtQa71TS6b01Quq6+oPAZw2No5ve78rR1P/AL4KWmnOxFRf4Wx2odb1Hf3Ny9tFSgRRnwBccuHrhv0QQrRbx7QPZv1TsrojfIKuO+6e3w19XFEWSU5JAHxWZOAScBwJGeeMhaOQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERARFe9BacrdXaztGmbcwvqbjVMgbgZ3QT8zj6AZJ9Agm/8AZ86BbY9nVXrWtpy2uvspZTucOLaaMkDHUbz94+oDVJ5W7TFmodO6dt1itsfw6O300dNA3OcMY0NGT1PBXFB4NRWigv8AYa6yXOBs9FXU76eeNw4OY4EEf2K5N7UNJVmhtfXjSlfvGW31Lo2vLd34jObHgeDmkH+V1zUOPtE9nZkgte0m3wOLo8UFyLRw3TkxPP8AO80n1aEELkREBERAREQEREBFe7jp+e0WuCrvO9Sz1cYkpKQj718Z5SuH5GEcs8XdBjirKUHxERAREQEREBERAREQEREBERAREQEREBSy+zs0F/iGqrrr+ups09rj7nQvcOBnkGXuHq1nD/kUT4mPlkbHG0ve4hrWgZJJ6Lqp2ddDN2e7IrJp2SFsdcIRUV+OJNRJ8z8nrjg36NCDYSIiArBtE0vQa00Rd9L3KNr6e40zoiSM7jsZa8erXAEfRX9EHHnVFlr9OajuNgukXwq231L6aducgOY4g4PUcOBVtUrvtDdngtWrbftBoIg2mu7RS1263GKhg+VxP7mAD/jPioooCIiAiLNdkezHVm0/ULbRpqhL2MINTVy5bBTNP5nu/g4A4nogxay2u43q6U9qtNFUV1dUvEcMEDC973HoAFum56V09sNtkNVqltHfdotREJKS0HEtLaAcESz44SSj8rOLevEYK2hrK5aE7LmmX6e0d8C+bSK6DdqblOwE0bXD8WOTR1azOTwLiRjMRbvcq+73Spulzq5autqZDLPNK4uc9xOSSUH283KuvF0qbpc6qWrramQyTTSOy57ieJK8ZREBERAREQEREBERAREQEREBERAREQEREG5+xvoP/rjbZbTUwfFttm/7jV55HcP3bT45fu8OoBXTEcAo69grQQ0xslOpKynDLjqKX44cR8wp25bEPofmf9HhSKQFoHtibYqzZhb9NUlkmaLnW3BlTMzPE0sLgXtI6B5Ib9N5b+PDmuXnaq10Nfbabzc6eZstuo39woHNOWmKMkbwPUOcXO/lB0y0xeqDUenbffrXL8WiuFMypgd1LXtBGfA8eIVxUUvs8toRuukbhs/r5i6qtDjU0W878VO8/M0f7Xkn+seClagwrbjoen2i7L71pWUNE9TAX0jzj7udnzRn6bwAPoSuUdfS1FDXT0VXC+Cop5HRSxvGHMc04II6EELsiuefbz2eHSu1QaooafctmommclvJtS3AlHpnLXfVzvBBHNFXoKOruFbDRUNNLU1M7xHFDEwue9xOAABxJJU0+zX2UYKDuuqtp0DKiq4SU9l5xxeBmP5j+wcB1J5ANQ9nHs26h2lSQ3y+iey6WyHCdzcTVY8Igen7yMeGeON97d9rGkdgWkW7OtmdBRQ30xkFkQ3m0IcP82Uni+U5yAST1dwwDc+1Z2g6DZvbpNIaOkp5tUSR7j3MAMdtYRwcRyMmDlrenAnhgHn7ca2ruNdPXV9TLVVVRIZJppXlz3uJySSeJJKD7dK+tulxqLjcaqarrKmR0s80ry58jyclxJ5krzIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAsn2V6Tq9c7Q7JpWjB37hVNje4fkjHF7v4aHH+FjCmH9nPoP4tdetodbA0sgH+H29zhk75w6Vw8MDcbn9zggmZaaCktVrpLZQQMgpKSFkEETBgMY1oa0D6ABelEQas7VGuxs/2L3m5wTNjuNYzuNACcH4soI3h6tbvP/pXLskk8VJ77QjXn+ObRqLRdHM19HYYd+oDTzqZACQf9rNwehLlGBBnGwvXNRs62oWXVMRJgp5wyrYM/eQP+WQfXdJI9QF1aoaqnraKGspJmTU88bZIpGOy17SMgg9QQuNqkfpTtUai0vsPoNF2qjDr9SB9NHc58OZDTf6e638zxkgZ4ANHB2Sgl/tw206O2U2svvFUKu7SM3qW107gZpfAn9DP3HwOMngoO32/7V+03r+K301M+aCJ+9DRw5bR2+M4Be9x6+LjknkByC9uxPYjrjbff5NTahrqyms00pfVXary+WpOeLYgfxHpn8I9cYU+tnGhdM7P9ORWHS9tjo6ZmDI/nJM/GC97vzOOP/zAQYD2e9gOl9lVEyueyO7alkZia4yM/wAvI4shB/A31/EepxwGI9rPtE02gaWfSOkKiKp1TMwtnmb8zbc0jmehk48G9OZ6A+vtlbbrjsys1Np3TtNNHe7vA58de9n3dNHndJYeTpM9Py8CeYC55VlTUVlVLVVc8k9RM8vklkcXOe4nJJJ4kk9UH6rquqr62atraiWpqZ3mSWWV5c97iclxJ4kk9VQREBERAREQEREBERAREQEREBERAREQEREBERBVpKearqoqWmjdLPM8Rxsbzc4nAA/ldYNiWi4tn+y+x6VYI/jUlMDVPj5STu+aR3rlxOPTCgn2H9CHVu2Onu9TC2S3aeArZA4ZDpuULfqHfN/Qui0b93fJ8eX90HpVl13qKi0lo27aluL2sprdSvnfk43iBwaPUnAHqVdHTEAfL8x6KLX2guuDTaRtmg6KpEc9zl71XtbxcII/wNPo5+T/AMR/kISapvVdqPUdxv1zk+JWXCpkqZnYwN57i448BxVtXqfRu32BjssdnDiPDieWeiv+h9C37WmoIrHpyiqK6rk5hjBuxjOC57t7DWjxQYzBFLPMyCCJ8ssjg1jGNJc4nkABzKmF2bOyhJP3bVO1GmdHHwkp7IThzvAz45Dkdwcf1dQtt9nbs7ab2X0sN7unwb3qhzQTVOZ91Sk8xCD9cFx4npjOFvAySB4JGOHJB+KdlPQU0VHR00VPTwsDIoo2BrGNHABoHADhyC9TTvNBHVWK0ahsV7uNwobZcqarqbbOIK6OJ+86CQgO3XeuD/fI5gq7CbdADW8OQQaS7bWz0622PVFxooDLdNPl1dTho+Z0QH3zPaN7HiwLm6ea7ISPimp3skY17XAtcwjIIPQ+i5b9pDZ+dnO1S6WaFm7b5ZDU28cf8h/Foyee7xbnxaUGtkREBERAREQEREBERAREQEREBERAREQEREBEWZ7EdGza+2pWHS0YPwqqpBqXD8kLPmkPtBx6kIJ09iPQR0lsWo7pPG1lw1A7v8hI4iIjETc+G7839ZW9fgHd58c8V+6WCGlpYqanjbFDCwRxsaMBrQMAAdAAtSbfdvmktlVE+kfI266ie3MNtgeMtyODpXfkb/cnoOoDYGudS6f0hYZ79qS6U9toIB80kp5no1o5ucegAJXM3bttFbtF2oXXUobP3CUiGjjlaA6OFmQ0EA8MgkkZ5uKt21XaTrDafqE3PUtwfPhxFNRxZEFO0n8MbP7cTknqSt99mvsqVt7dTao2lQTUNsyJKe0nLJqgcwZerGH9P4j+3qGt9gWxbUu1auhkoYJbbp+ne5tRc52fIf2Rj87+PLkOpU+9l+zXTGziwNs+maBkLSAaiof801Q/9T3devDkM8AFlVpt1BabbT222UcFHR0zBHDBCwMZG0cgAOAC9SCh8J5AaXDdCi52su0dTaZmqdEaJrPiXkNMddXxYc2k6GNhzxk8T+X68qHa77SLbC2r0HoCtDrsQY7jcojkUnQxxn/yeJ/L04/hg1I90j3Pe4uc45c4nJJQb87Ge0gaW2yMorlUOZQaiLKOZ8hziX/SeT47x3c/vK6JiF2BxHA5XHGGSSGZksT3MkY4Oa5pwQRyIXU/s4a+btH2R2fUEkwkuDY+7XEYwRUMwHHA/VwcPRwQZ98B264EjnkKN/bx2eMvuzqDWUFMJK3T7z8bcblz6aQgOzjid12670BcpMLy3egpbraqu2V0QmpauF8E0Z5OY4EOH9ig45OxvHAwM8Aviyza/oyr2f7R71pSrDyKGoIgkeMGWE/NG/8AlpB+uViaAiIgIiICIiAiIgIiICIiAiIgIiICIiApo/Z5aOp7ZY9QbTrvJDTwvBoaWWYhrY4mYfM8uPAAncGf2uULln+rdqWo73oy06Ho53WzTFrp2xMoKc7oqHgkullI/G5ziTjkOgzxISP7Rfa1A7zprZZLk8Y5725v9xAD/I3yPp0con6fsuptearZb7VS1t6vNfIXO4l8j3Hi573Hp1LifqVlmw7Y3qvavexS2anNNbIngVlzmafgwDngfrf4NHiM4HFdEtjWyjSWyywi3adogamRo73XygGepI/U7oBng0cB9clBrTs39mex7PhT6h1T8C86mGHM+Xep6M//ABgj5nfvP8AczIdEPAZKAoj9r3tIi0Cs0DoCtBuJzFcrnE7hT9HRRn9fQu/LyHHlQ7XvaSFB3vQGz+tzV8YbndInf5PR0UR/VzBd05DjxEJ3EuJLiSScklAcS5xc4kknJJ6r4iICk19n/tDOnto1RouunLaDUDPuA53ysqowS3ny3m7w9SGqMq9dnuFXabtSXShldDVUc7J4ZBza9rg5p/uEHY1FimyLWVJr/ZzZdV0ZYO/UwdNG05+FMPlkZ/Dg4LK0ERPtEtngq7LbNo9vpyZqIihuJb1icSYnkejiW5/ePBQiXYDW2nbfq3SV001dYw+juNM+nkyM7u8MBw9QcEeoC5L6109X6T1ZdNN3NobWW6pfTy4zhxacbwz0I4j0KCzoiICIiAiIgIiICIiAiIgIiICIiAiIgLenZZ2CV+1S6m73gT0OlaR+Jp2jD6p4/wBKMn/7d0+qwnYJs5rdqO0ig0zTl8VIT8avqGtz8GnaRvH6ng0epC6k6Zsdr03YaOxWWjjo7fRRCKCGPk1o+vEn1PE9UH50xYLNpix01ksNugt9vpWbkMELcNaPH1JPEk8SeJVzRCQASSABzKATgZKh12ve0kIO+aA2fVwMvGG53SF34OhiicOvMOcPoPEefte9pMO73oDZ7XZHGG53WF/8OiiI/kOd/A8VDU8TnOUBxJOTzXxEQEREBERBL37OzaEaW8XTZxcKgCGsBrrc13SVoAlYD6tAdj9rvFTbXIHQ2o7hpHV1r1La5Cyrt1SyePBxvbp4tPoRkH0JXWXQ+pbZrDSVt1LZ5hLRXCnbNGcjLcji045OByCPEFBeVBz7RbQkNv1JZ9f0YDRdGmirWhuB8WMZY7PUlmR/QFONQ9+0h1XbjZ9OaLhnZJX96dcZ42njEwMcxmf9xe72oIUoiICIiAiIgIiICIiAiIgIiICIiAiIgm79mzbrQNNaquzZI3Xh1ZHTyMz8zKcMDmn0DnF/13B4KXa5EaE1rqjQ15F30peam11m7uPdEQWyNzndc05Dh6EFbpHbG2ti3Cl+Dp0yhu73k0T/AIh9cb+7n+MeiDoFerpbbLbJ7nd66noaKnYXzTzyBjGAdSTwUHe0/wBqKp1PHVaR2dzzUlmdmOruYyyWrbyLWdWRnx4OPoMg6E2hbTNda/mbJq3UlbcmMcXRwOcGQsPi2NoDQfXCxBB9yviIgIiICIiAiIgLaGxPblrnZS6SnsdVDV2qZxfJbqxpfDvnHztwQWu4dDx6g8Fq9EEqL/21ta1dtdBaNMWa21L2lpqHvfMWHxa04GR65CjRqW+XfUl8qr3fbhPcLjVP35p5nZc4/wDoDkAOAHAK3IgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiIP/2Q==" alt="Ascend" style="height:28px;width:auto;object-fit:contain;display:inline-block;vertical-align:middle;margin-right:6px;">ASCEND</a></div>
+    <ul class="nav-center">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html" class="active">Contact</a></li>
+    </ul>
+    <div class="nav-right"><a href="shop.html" class="nav-cta">Shop Now</a></div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker"><div class="t-track" id="t-track"></div></div>
+
+<!-- ══ PAGE HEADER ══ -->
+<div class="page-header">
+    <div class="ph-inner">
+        <div>
+            <p class="ph-eyebrow">Get In Touch</p>
+            <h1 class="ph-title">
+                CONTACT<br><span class="outline">US.</span>
+            </h1>
+        </div>
+        <div class="ph-right">
+            <p class="ph-desc">
+                Questions about your order, sizing, or the collab?
+                <strong>We're here and we respond fast.</strong>
+                Fill out the form or check the FAQ below.
+            </p>
+            <div class="ph-meta">
+                <div class="ph-meta-item">
+                    <span class="ph-meta-label">Location</span>
+                    <span class="ph-meta-value">Manila, Philippines 🇵🇭</span>
+                </div>
+                <div class="ph-meta-item">
+                    <span class="ph-meta-label">Response</span>
+                    <span class="ph-meta-value">Within 24 hours</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ INFO STRIP ══ -->
+<div class="info-strip reveal">
+    <div class="info-block">
+        <div class="info-icon">📍</div>
+        <span class="info-label">Address</span>
+        <span class="info-value">Manila, Philippines</span>
+    </div>
+    <div class="info-block">
+        <div class="info-icon">📞</div>
+        <span class="info-label">Phone</span>
+        <span class="info-value">+63 123 456 7890</span>
+    </div>
+    <div class="info-block">
+        <div class="info-icon">🚚</div>
+        <span class="info-label">Delivery</span>
+        <span class="info-value">Nationwide · 3–5 Business Days</span>
+    </div>
+</div>
+
+<!-- ══ MAIN CONTENT ══ -->
+<div class="content-grid reveal">
+
+    <!-- FAQ -->
+    <div class="faq-col">
+        <p class="col-label">Quick Answers</p>
+        <h2 class="col-title">COMMON QUESTIONS</h2>
+
+        <div class="faq-item">
+            <div class="faq-q">
+                <span class="faq-q-text">What products do you sell?</span>
+                <div class="faq-icon">+</div>
+            </div>
+            <p class="faq-a">We sell premium gymwear and streetwear from the breathdivinity × Ascend collaboration — hoodies, tees, longsleeved shirts, sweatpants, tanks, and more. All clothing, no supplements or equipment.</p>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-q">
+                <span class="faq-q-text">Do you offer nationwide delivery?</span>
+                <div class="faq-icon">+</div>
+            </div>
+            <p class="faq-a">Yes — we deliver nationwide across the Philippines. Orders are dispatched within 24 hours from Manila and arrive within 3–5 business days. Free shipping on orders over ₱2,000.</p>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-q">
+                <span class="faq-q-text">What payment methods do you accept?</span>
+                <div class="faq-icon">+</div>
+            </div>
+            <p class="faq-a">We accept Cash on Delivery (COD), GCash, Maya, and all major credit and debit cards. Your payment is always secure.</p>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-q">
+                <span class="faq-q-text">What is your return policy?</span>
+                <div class="faq-icon">+</div>
+            </div>
+            <p class="faq-a">We offer a 30-day return policy for any defective or damaged items. Items must be in original condition with tags attached. Contact us to start a return.</p>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-q">
+                <span class="faq-q-text">How do I choose the right size?</span>
+                <div class="faq-icon">+</div>
+            </div>
+            <p class="faq-a">Our clothing runs in sizes XS to 3XL. All items are oversized or streetwear-fit — we recommend sizing down if you prefer a more fitted look. When in doubt, contact us for a size guide.</p>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-q">
+                <span class="faq-q-text">What is the breathdivinity × Ascend collab?</span>
+                <div class="faq-icon">+</div>
+            </div>
+            <p class="faq-a">breathdivinity is a US-based gothic streetwear brand. Ascend brings their pieces directly to Filipino athletes and streetwear fans — from the USA, straight to PH 🇺🇸→🇵🇭.</p>
+        </div>
+
+    </div>
+
+    <!-- CONTACT FORM -->
+    <div class="form-col">
+        <p class="col-label">Send A Message</p>
+        <h2 class="col-title">MESSAGE US</h2>
+
+        <form id="contact-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-input" placeholder="Your name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input" placeholder="you@email.com" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Subject</label>
+                <input type="text" class="form-input" placeholder="Order inquiry, sizing, returns…" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Message</label>
+                <textarea class="form-input" rows="5" placeholder="Tell us what you need…" required></textarea>
+            </div>
+            <button type="submit" class="submit-btn">
+                <span>Send Message</span>
+                <span class="submit-btn-arrow">→</span>
+            </button>
+        </form>
+
+        <div class="form-success" id="form-success">
+            <div class="form-success-icon">✓</div>
+            <div class="form-success-title">MESSAGE SENT</div>
+            <p class="form-success-body">Thank you for reaching out. We'll get back to you within 24 hours — keep an eye on your inbox.</p>
+        </div>
+
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <div class="fl">
+        <div class="fl-brand">ASCEND</div>
+        <p class="fl-tag">Premium gymwear & streetwear.<br>From the USA, for the Philippines. 🇺🇸→🇵🇭</p>
+    </div>
+    <div class="fr">
+        <div class="fc">
+            <p class="fc-t">Navigate</p>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+        <div class="fc">
+            <p class="fc-t">Support</p>
+            <ul>
+                <li><a href="ShippingInfo.html">Shipping Info</a></li>
+                <li><a href="Returns.html">Returns</a></li>
+                <li><a href="SizingGuide.html">Size Guide</a></li>
+                <li><a href="#">breathdivinity</a></li>
+            </ul>
+        </div>
+    </div>
+</footer>
+<div class="fbot">
+    <p>© 2026 Ascend Gymwear. All rights reserved.</p>
+    <p>Ascend × breathdivinity — From USA, For PH. 🇵🇭</p>
+</div>
+
+<script>
+/* CURSOR */
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function t(){cur.style.left=mx+'px';cur.style.top=my+'px';rx+=(mx-rx)*.13;ry+=(my-ry)*.13;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(t);})();
+document.addEventListener('mouseover',e=>ring.classList.toggle('xl',!!e.target.closest('a,button,.faq-item')));
+
+/* TICKER */
+[['Delivery','3–5 Business Days'],['Free Shipping','Orders Over ₱2,000'],
+ ['Returns','30-Day Policy'],['Payment','COD · GCash · Card'],
+ ['Location','Manila, Philippines 🇵🇭'],['Collab','USA → PH 🇺🇸'],
+].flatMap(x=>[x,x]).forEach(([l,v])=>{
+    const d=document.createElement('div');
+    d.className='t-item';
+    d.innerHTML=`${l} <b>${v}</b>`;
+    document.getElementById('t-track').appendChild(d);
+});
+
+/* FAQ TOGGLE */
+document.querySelectorAll('.faq-item').forEach(item=>{
+    item.querySelector('.faq-q').addEventListener('click',()=>{
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+        document.querySelectorAll('.faq-icon').forEach(i=>i.textContent='+');
+        if(!isOpen){
+            item.classList.add('open');
+            item.querySelector('.faq-icon').textContent='−';
+        }
+    });
+});
+
+/* FORM SUBMIT */
+document.getElementById('contact-form').addEventListener('submit',e=>{
+    e.preventDefault();
+    document.getElementById('contact-form').style.display='none';
+    document.getElementById('form-success').classList.add('visible');
+});
+
+/* SCROLL REVEAL */
+const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+},{threshold:.06});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

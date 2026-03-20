@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="AscendLogo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Returns & Refunds | Ascend × breathdivinity</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+    <style>
+        :root{--black:#080808;--white:#f4f4ef;--mid:#0f0f0f;--border:#1c1c1c;--muted:#484848;--accent:#c8c8c0;}
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+        html{scroll-behavior:smooth;}
+        body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;cursor:none;}
+        .cur{width:8px;height:8px;background:var(--white);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+        .cur-ring{width:34px;height:34px;border:1px solid rgba(244,244,239,.28);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .25s,height .25s,border-color .25s;}
+        .cur-ring.xl{width:64px;height:64px;border-color:rgba(244,244,239,.5);}
+
+        /* NAV */
+        nav{position:fixed;top:0;left:0;right:0;height:64px;display:grid;grid-template-columns:220px 1fr 220px;align-items:center;padding:0 2.5rem;background:rgba(8,8,8,.97);border-bottom:1px solid var(--border);z-index:400;}
+        .nav-brand{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:5px;color:var(--white);text-decoration:none;}
+        .nav-center{display:flex;justify-content:center;gap:2.5rem;list-style:none;}
+        .nav-center a{font-size:.68rem;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;}
+        .nav-center a:hover{color:var(--white);}
+        .nav-right{display:flex;justify-content:flex-end;}
+        .nav-cta{font-size:.65rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--black);background:var(--white);text-decoration:none;padding:.5rem 1.3rem;border-radius:1px;transition:background .2s;}
+        .nav-cta:hover{background:var(--accent);}
+
+        /* TICKER */
+        .ticker{margin-top:64px;height:32px;border-bottom:1px solid var(--border);overflow:hidden;display:flex;align-items:center;}
+        .t-track{display:flex;animation:tRoll 28s linear infinite;white-space:nowrap;}
+        .t-item{font-size:.56rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);padding:0 2.4rem;border-right:1px solid var(--border);display:flex;align-items:center;height:32px;flex-shrink:0;}
+        .t-item b{color:var(--white);font-weight:500;margin-left:.4rem;}
+        @keyframes tRoll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+        /* PAGE HEADER */
+        .page-hdr{
+            min-height:40vh;display:flex;flex-direction:column;justify-content:flex-end;
+            padding:5rem;border-bottom:1px solid var(--border);
+            position:relative;overflow:hidden;
+        }
+        .page-hdr::before{
+            content:'RETURNS';position:absolute;right:-1rem;top:50%;transform:translateY(-50%);
+            font-family:'Bebas Neue',sans-serif;font-size:clamp(5rem,14vw,15rem);
+            letter-spacing:-.02em;color:rgba(244,244,239,.022);pointer-events:none;white-space:nowrap;line-height:1;
+        }
+        .ph-inner{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:flex-end;position:relative;z-index:1;}
+        .ph-eyebrow{font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:1.4rem;display:flex;align-items:center;gap:.8rem;}
+        .ph-eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--muted);}
+        .ph-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.5rem,6.5vw,7rem);line-height:.88;letter-spacing:3px;}
+        .ph-title .outline{color:transparent;-webkit-text-stroke:1.5px var(--white);}
+        .ph-desc{font-size:.86rem;color:var(--muted);line-height:1.95;max-width:400px;padding-bottom:.3rem;}
+        .ph-desc strong{color:var(--accent);font-weight:500;}
+
+        /* QUICK STATS */
+        .quick-stats{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border);}
+        .qs{padding:2rem 2.5rem;border-right:1px solid var(--border);transition:background .25s;}
+        .qs:last-child{border-right:none;}
+        .qs:hover{background:var(--mid);}
+        .qs-ico{font-size:1.2rem;margin-bottom:.6rem;filter:grayscale(1);}
+        .qs-val{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:2px;line-height:1;margin-bottom:.25rem;}
+        .qs-lbl{font-size:.54rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);}
+
+        /* MAIN LAYOUT */
+        .main-grid{display:grid;grid-template-columns:1fr 340px;border-bottom:1px solid var(--border);align-items:start;}
+        .main-left{border-right:1px solid var(--border);}
+
+        /* Section row header */
+        .sec-row{padding:1.1rem 2.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.8rem;}
+        .sec-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;}
+        .sec-t{font-size:.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);}
+
+        /* Eligibility grid */
+        .elig-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);}
+        .elig-card{background:var(--black);padding:2rem 2.5rem;transition:background .2s;}
+        .elig-card:hover{background:var(--mid);}
+        .elig-icon{font-size:1.5rem;margin-bottom:.8rem;filter:grayscale(1);}
+        .elig-title{font-size:.85rem;font-weight:600;margin-bottom:.5rem;}
+        .elig-body{font-size:.74rem;color:var(--muted);line-height:1.75;}
+        .elig-body strong{color:var(--accent);font-weight:500;}
+        .elig-tag{display:inline-block;font-size:.5rem;letter-spacing:1.5px;text-transform:uppercase;padding:.18rem .6rem;border-radius:1px;font-weight:700;margin-bottom:.6rem;}
+        .elig-tag.yes{background:rgba(76,175,80,.15);color:#4caf50;border:1px solid rgba(76,175,80,.3);}
+        .elig-tag.no{background:rgba(229,57,53,.12);color:#e53935;border:1px solid rgba(229,57,53,.25);}
+
+        /* Process steps */
+        .process-wrap{padding:2.5rem;}
+        .p-step{display:grid;grid-template-columns:44px 1fr;gap:1.2rem;padding-bottom:2rem;position:relative;}
+        .p-step:last-child{padding-bottom:0;}
+        .p-step:not(:last-child)::after{content:'';position:absolute;left:21px;top:44px;bottom:0;width:1px;background:var(--border);}
+        .p-num{width:44px;height:44px;flex-shrink:0;border:1px solid var(--border);border-radius:1px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px;color:var(--muted);background:var(--black);z-index:1;}
+        .p-num.active{border-color:var(--white);color:var(--white);}
+        .p-body{padding-top:.35rem;}
+        .p-title{font-size:.88rem;font-weight:600;margin-bottom:.3rem;}
+        .p-desc{font-size:.74rem;color:var(--muted);line-height:1.75;}
+        .p-desc strong{color:var(--accent);font-weight:500;}
+        .p-time{font-size:.56rem;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-top:.35rem;}
+
+        /* Conditions table */
+        .cond-table{width:100%;border-collapse:collapse;}
+        .cond-table th{font-size:.54rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);font-weight:500;padding:.9rem 1.5rem;text-align:left;border-bottom:1px solid var(--border);}
+        .cond-table td{font-size:.8rem;padding:.85rem 1.5rem;border-bottom:1px solid var(--border);transition:background .2s;}
+        .cond-table tr:last-child td{border-bottom:none;}
+        .cond-table tbody tr:hover td{background:var(--mid);}
+        .pill{display:inline-flex;align-items:center;gap:.3rem;font-size:.5rem;letter-spacing:1.5px;text-transform:uppercase;padding:.18rem .6rem;border-radius:1px;font-weight:700;}
+        .pill.full{background:rgba(76,175,80,.15);color:#4caf50;border:1px solid rgba(76,175,80,.3);}
+        .pill.partial{background:rgba(255,152,0,.12);color:#ff9800;border:1px solid rgba(255,152,0,.28);}
+        .pill.no{background:rgba(229,57,53,.12);color:#e53935;border:1px solid rgba(229,57,53,.25);}
+
+        /* SIDEBAR */
+        .sidebar{padding:2.5rem 2rem;}
+        .sb-sec{margin-bottom:2rem;padding-bottom:2rem;border-bottom:1px solid var(--border);}
+        .sb-sec:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+        .sb-title{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:3px;margin-bottom:.6rem;}
+        .sb-body{font-size:.75rem;color:var(--muted);line-height:1.85;}
+        .sb-body strong{color:var(--accent);font-weight:500;}
+        .sb-list{display:flex;flex-direction:column;gap:.5rem;margin-top:.8rem;}
+        .sb-li{display:flex;gap:.8rem;font-size:.73rem;color:var(--muted);line-height:1.65;}
+        .sb-li::before{content:'—';color:var(--border);flex-shrink:0;margin-top:.05rem;}
+        .cta-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:.9rem 1.2rem;background:var(--white);color:var(--black);font-family:'DM Sans',sans-serif;font-size:.63rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;text-decoration:none;border-radius:1px;cursor:none;transition:background .2s;margin-top:1rem;border:none;}
+        .cta-btn:hover{background:var(--accent);}
+        .cta-ghost{display:flex;align-items:center;justify-content:space-between;width:100%;padding:.9rem 1.2rem;background:transparent;color:var(--white);font-family:'DM Sans',sans-serif;font-size:.63rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-decoration:none;border-radius:1px;cursor:none;border:1px solid var(--border);transition:border-color .2s;margin-top:.6rem;}
+        .cta-ghost:hover{border-color:var(--accent);}
+
+        /* ═══ RETURN FORM ═══ */
+        .form-section{border-top:1px solid var(--border);}
+        .form-wrap{display:grid;grid-template-columns:1fr 400px;align-items:start;border-bottom:1px solid var(--border);}
+        .form-col{padding:3rem;border-right:1px solid var(--border);}
+        .form-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:3px;margin-bottom:.5rem;}
+        .form-sub{font-size:.76rem;color:var(--muted);line-height:1.7;margin-bottom:2.5rem;}
+        .form-sub strong{color:var(--accent);font-weight:500;}
+
+        .f-row{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+        .f-grp{margin-bottom:1.6rem;}
+        .f-lbl{display:block;font-size:.54rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:.55rem;}
+        .f-inp{width:100%;background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:.88rem;padding:.65rem 0;outline:none;transition:border-color .25s;border-radius:0;}
+        .f-inp:focus{border-bottom-color:var(--accent);}
+        .f-inp::placeholder{color:var(--muted);font-size:.82rem;}
+        select.f-inp{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23484848'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .4rem center;cursor:none;}
+        select.f-inp option{background:var(--black);}
+        textarea.f-inp{resize:none;min-height:90px;padding-top:.5rem;}
+
+        /* Reason chips */
+        .reason-chips{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.6rem;}
+        .reason-chip{
+            font-size:.58rem;letter-spacing:1.5px;text-transform:uppercase;
+            border:1px solid var(--border);padding:.35rem .9rem;border-radius:1px;
+            color:var(--muted);cursor:none;background:transparent;
+            font-family:'DM Sans',sans-serif;font-weight:600;
+            transition:border-color .2s,color .2s,background .2s;
+        }
+        .reason-chip:hover{border-color:var(--muted);color:var(--white);}
+        .reason-chip.sel{border-color:var(--white);color:var(--black);background:var(--white);}
+
+        /* Photo upload area */
+        .upload-area{
+            border:1px dashed var(--border);border-radius:1px;padding:2rem;
+            text-align:center;margin-bottom:1.6rem;cursor:none;
+            transition:border-color .2s,background .2s;
+        }
+        .upload-area:hover{border-color:var(--accent);background:rgba(200,200,192,.03);}
+        .upload-icon{font-size:1.8rem;opacity:.25;margin-bottom:.5rem;}
+        .upload-txt{font-size:.62rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+        .upload-txt span{color:var(--accent);}
+        .upload-sub{font-size:.58rem;color:var(--muted);margin-top:.3rem;}
+        .upload-previews{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;}
+        .upload-prev-img{width:60px;height:60px;object-fit:cover;border:1px solid var(--border);border-radius:1px;}
+
+        /* Submit */
+        .form-submit{
+            display:flex;align-items:center;justify-content:space-between;
+            width:100%;padding:1rem 1.5rem;
+            background:var(--white);color:var(--black);
+            font-family:'DM Sans',sans-serif;font-size:.65rem;font-weight:700;
+            letter-spacing:2.5px;text-transform:uppercase;
+            border:none;border-radius:1px;cursor:none;
+            transition:background .2s;margin-top:.5rem;
+        }
+        .form-submit:hover{background:var(--accent);}
+
+        /* Form success */
+        .form-success{display:none;padding:3rem;text-align:center;flex-direction:column;align-items:center;gap:1rem;}
+        .form-success.vis{display:flex;}
+        .fs-check{width:56px;height:56px;border:1px solid var(--accent);border-radius:1px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:var(--accent);}
+        .fs-ref{font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);}
+        .fs-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:3px;}
+        .fs-body{font-size:.76rem;color:var(--muted);line-height:1.85;max-width:360px;}
+        .fs-body strong{color:var(--accent);font-weight:500;}
+
+        /* Form info sidebar */
+        .form-info{padding:3rem 2rem;}
+        .fi-sec{margin-bottom:2rem;padding-bottom:2rem;border-bottom:1px solid var(--border);}
+        .fi-sec:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+        .fi-title{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:3px;margin-bottom:.5rem;}
+        .fi-body{font-size:.72rem;color:var(--muted);line-height:1.8;}
+        .fi-body strong{color:var(--accent);font-weight:500;}
+        .fi-list{margin-top:.6rem;display:flex;flex-direction:column;gap:.4rem;}
+        .fi-li{font-size:.7rem;color:var(--muted);display:flex;gap:.6rem;line-height:1.6;}
+        .fi-li::before{content:'→';color:var(--border);flex-shrink:0;}
+
+        /* FAQ */
+        .faq-wrap{padding:2.5rem;}
+        .faq-item{border-bottom:1px solid var(--border);}
+        .faq-item:last-child{border-bottom:none;}
+        .faq-q{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 0;cursor:none;transition:color .2s;gap:1rem;}
+        .faq-q:hover{color:var(--accent);}
+        .faq-q-txt{font-size:.85rem;font-weight:500;}
+        .faq-icon{width:24px;height:24px;flex-shrink:0;border:1px solid var(--border);border-radius:1px;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--muted);transition:background .2s,color .2s,border-color .2s;}
+        .faq-item.open .faq-icon{background:var(--white);color:var(--black);border-color:var(--white);}
+        .faq-a{font-size:.78rem;color:var(--muted);line-height:1.85;max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.22,1,.36,1),padding .35s;padding-bottom:0;}
+        .faq-item.open .faq-a{max-height:300px;padding-bottom:1.2rem;}
+
+        /* COLLAB BANNER */
+        .collab-s{display:grid;grid-template-columns:1fr 1px 1fr;border-bottom:1px solid var(--border);min-height:160px;}
+        .cb-l{padding:3rem 4rem;display:flex;flex-direction:column;justify-content:center;gap:.6rem;}
+        .cb-ey{font-size:.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);}
+        .cb-ti{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,3vw,3rem);letter-spacing:4px;line-height:1;}
+        .cb-x{color:var(--muted);}
+        .cb-dv{background:var(--border);}
+        .cb-r{padding:3rem 4rem;display:flex;flex-direction:column;justify-content:center;gap:.7rem;}
+        .cb-bo{font-size:.8rem;color:var(--muted);line-height:1.9;font-style:italic;font-weight:300;}
+        .cb-bo strong{color:var(--accent);font-weight:500;font-style:normal;}
+        .cb-fl{font-size:.58rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.6rem;}
+        .cb-fl::before{content:'';display:block;width:20px;height:1px;background:var(--muted);}
+
+        /* FOOTER */
+        footer{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--border);}
+        .fl{padding:3.5rem 4rem;border-right:1px solid var(--border);}
+        .fl-brand{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:6px;margin-bottom:.6rem;}
+        .fl-tag{font-size:.72rem;color:var(--muted);line-height:1.8;}
+        .fr{display:grid;grid-template-columns:1fr 1fr;}
+        .fc{padding:3.5rem 2.5rem;border-right:1px solid var(--border);}
+        .fc:last-child{border-right:none;}
+        .fc-t{font-size:.56rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:1.2rem;}
+        .fc ul{list-style:none;display:flex;flex-direction:column;gap:.7rem;}
+        .fc a{font-size:.76rem;color:var(--white);text-decoration:none;opacity:.38;transition:opacity .2s;}
+        .fc a:hover{opacity:1;}
+        .fbot{padding:1.2rem 4rem;display:flex;justify-content:space-between;border-top:1px solid var(--border);}
+        .fbot p{font-size:.58rem;color:var(--muted);letter-spacing:1px;}
+
+        .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease;}
+        .reveal.visible{opacity:1;transform:translateY(0);}
+
+        ::-webkit-scrollbar{width:3px;}
+        ::-webkit-scrollbar-track{background:var(--black);}
+        ::-webkit-scrollbar-thumb{background:var(--border);}
+
+        @media(max-width:1024px){
+            nav{grid-template-columns:auto 1fr auto;padding:0 1.2rem;}
+            .page-hdr{padding:3rem 2rem;}
+            .ph-inner{grid-template-columns:1fr;gap:2rem;}
+            .quick-stats{grid-template-columns:1fr 1fr;}
+            .main-grid{grid-template-columns:1fr;}
+            .main-left{border-right:none;border-bottom:1px solid var(--border);}
+            .form-wrap{grid-template-columns:1fr;}
+            .form-col{border-right:none;border-bottom:1px solid var(--border);}
+            .f-row{grid-template-columns:1fr;}
+            .elig-grid{grid-template-columns:1fr;}
+            .collab-s{grid-template-columns:1fr;}
+            .cb-dv{height:1px;width:100%;}
+            footer{grid-template-columns:1fr;}
+            .fl{border-right:none;border-bottom:1px solid var(--border);}
+            .fbot{flex-direction:column;gap:.4rem;}
+        }
+    </style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+<div class="cur-ring" id="cur-ring"></div>
+
+<!-- NAV -->
+<nav>
+    <div><a href="index.html" class="nav-brand"><img src="data:image/png;base64,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" alt="Ascend" style="height:28px;width:auto;object-fit:contain;display:inline-block;vertical-align:middle;margin-right:6px;">ASCEND</a></div>
+    <ul class="nav-center">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-right"><a href="shop.html" class="nav-cta">Shop Now</a></div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker"><div class="t-track" id="t-track"></div></div>
+
+<!-- PAGE HEADER -->
+<div class="page-hdr">
+    <div class="ph-inner">
+        <div>
+            <p class="ph-eyebrow">Ascend × breathdivinity — Customer Care</p>
+            <h1 class="ph-title">RETURNS<br><span class="outline">&amp; REFUNDS.</span></h1>
+        </div>
+        <p class="ph-desc">
+            We stand behind every piece in our collection.
+            If something isn't right — <strong>we'll make it right.</strong>
+            Read our policy below or submit a return request directly.
+        </p>
+    </div>
+</div>
+
+<!-- QUICK STATS -->
+<div class="quick-stats reveal">
+    <div class="qs"><div class="qs-ico">📅</div><div class="qs-val">30</div><div class="qs-lbl">Day Return Window</div></div>
+    <div class="qs"><div class="qs-ico">⚡</div><div class="qs-val">3–5</div><div class="qs-lbl">Days Processing</div></div>
+    <div class="qs"><div class="qs-ico">💸</div><div class="qs-val">FULL</div><div class="qs-lbl">Refund on Defects</div></div>
+    <div class="qs"><div class="qs-ico">📦</div><div class="qs-val">FREE</div><div class="qs-lbl">Return Shipping on Our Error</div></div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main-grid reveal">
+    <div class="main-left">
+
+        <!-- Eligibility -->
+        <div class="sec-row"><div class="sec-dot"></div><span class="sec-t">Return Eligibility</span></div>
+        <div class="elig-grid">
+            <div class="elig-card">
+                <span class="elig-tag yes">✓ Eligible</span>
+                <div class="elig-icon">👕</div>
+                <div class="elig-title">Defective or Damaged Items</div>
+                <div class="elig-body">Items that arrive with <strong>manufacturing defects, holes, misprints, or physical damage</strong> are fully eligible for a refund or replacement. Contact us within 30 days of delivery.</div>
+            </div>
+            <div class="elig-card">
+                <span class="elig-tag yes">✓ Eligible</span>
+                <div class="elig-icon">📦</div>
+                <div class="elig-title">Wrong Item Received</div>
+                <div class="elig-body">Received a different product, color, or size than what you ordered? <strong>We'll cover the return shipping and send the correct item at no charge.</strong></div>
+            </div>
+            <div class="elig-card">
+                <span class="elig-tag yes">✓ Eligible</span>
+                <div class="elig-icon">📏</div>
+                <div class="elig-title">Size Exchange</div>
+                <div class="elig-body">Need a different size? We offer <strong>one free size exchange per order</strong> within 30 days, as long as the item is unworn, unwashed, and has its original tags attached.</div>
+            </div>
+            <div class="elig-card">
+                <span class="elig-tag no">✗ Not Eligible</span>
+                <div class="elig-icon">🚫</div>
+                <div class="elig-title">Change of Mind</div>
+                <div class="elig-body">We do not accept returns for change of mind, incorrect size selection where a size guide was available, or items that have been worn, washed, or had their tags removed.</div>
+            </div>
+        </div>
+
+        <!-- Process Steps -->
+        <div class="sec-row"><div class="sec-dot"></div><span class="sec-t">Return Process</span></div>
+        <div class="process-wrap">
+            <div class="p-step">
+                <div class="p-num active">1</div>
+                <div class="p-body">
+                    <div class="p-title">Submit Your Return Request</div>
+                    <div class="p-desc">Fill out the return request form below with your <strong>order number, item details, and reason for return.</strong> Attach clear photos of the issue if applicable.</div>
+                    <div class="p-time">Takes 5 minutes</div>
+                </div>
+            </div>
+            <div class="p-step">
+                <div class="p-num active">2</div>
+                <div class="p-body">
+                    <div class="p-title">Review & Approval</div>
+                    <div class="p-desc">Our team reviews your request within <strong>1–2 business days.</strong> You'll receive an email with approval and further instructions including a return reference number.</div>
+                    <div class="p-time">1–2 Business Days</div>
+                </div>
+            </div>
+            <div class="p-step">
+                <div class="p-num active">3</div>
+                <div class="p-body">
+                    <div class="p-title">Ship the Item Back</div>
+                    <div class="p-desc">Pack the item securely in its original packaging if available. Include your <strong>return reference number</strong> inside the parcel. Ship to our Manila return address provided in the approval email.</div>
+                    <div class="p-time">Ship within 7 days of approval</div>
+                </div>
+            </div>
+            <div class="p-step">
+                <div class="p-num">4</div>
+                <div class="p-body">
+                    <div class="p-title">Item Received & Inspected</div>
+                    <div class="p-desc">Once we receive your item, we inspect it within <strong>2–3 business days.</strong> You'll be notified of the inspection result and whether your refund or exchange is approved.</div>
+                    <div class="p-time">2–3 Business Days after receipt</div>
+                </div>
+            </div>
+            <div class="p-step">
+                <div class="p-num">5</div>
+                <div class="p-body">
+                    <div class="p-title">Refund or Replacement Issued</div>
+                    <div class="p-desc">Approved refunds are processed back to your original payment method within <strong>3–5 business days.</strong> Exchanges are shipped immediately upon approval.</div>
+                    <div class="p-time">3–5 Business Days</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conditions Table -->
+        <div class="sec-row"><div class="sec-dot"></div><span class="sec-t">Refund Conditions by Scenario</span></div>
+        <table class="cond-table">
+            <thead>
+                <tr>
+                    <th>Scenario</th>
+                    <th>Refund</th>
+                    <th>Exchange</th>
+                    <th>Return Shipping</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Item arrived defective / damaged</td>
+                    <td><span class="pill full">Full Refund</span></td>
+                    <td><span class="pill full">Free Exchange</span></td>
+                    <td><span class="pill full">We Cover It</span></td>
+                </tr>
+                <tr>
+                    <td>Wrong item / size shipped by us</td>
+                    <td><span class="pill full">Full Refund</span></td>
+                    <td><span class="pill full">Free Exchange</span></td>
+                    <td><span class="pill full">We Cover It</span></td>
+                </tr>
+                <tr>
+                    <td>Size exchange (within 30 days)</td>
+                    <td><span class="pill no">Not Eligible</span></td>
+                    <td><span class="pill full">1× Free</span></td>
+                    <td><span class="pill partial">Customer Pays</span></td>
+                </tr>
+                <tr>
+                    <td>Item lost in transit</td>
+                    <td><span class="pill full">Full Refund</span></td>
+                    <td><span class="pill full">Free Reship</span></td>
+                    <td><span class="pill full">Not Applicable</span></td>
+                </tr>
+                <tr>
+                    <td>Change of mind (unworn, with tags)</td>
+                    <td><span class="pill no">Not Eligible</span></td>
+                    <td><span class="pill no">Not Eligible</span></td>
+                    <td><span class="pill no">Not Applicable</span></td>
+                </tr>
+                <tr>
+                    <td>Item worn, washed, or tags removed</td>
+                    <td><span class="pill no">Not Eligible</span></td>
+                    <td><span class="pill no">Not Eligible</span></td>
+                    <td><span class="pill no">Not Applicable</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- FAQ -->
+        <div class="sec-row"><div class="sec-dot"></div><span class="sec-t">Common Questions</span></div>
+        <div class="faq-wrap">
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span class="faq-q-txt">How long does a refund take to appear?</span>
+                    <div class="faq-icon">+</div>
+                </div>
+                <p class="faq-a">Once approved, refunds are processed within 3–5 business days. The time it takes to appear in your account depends on your bank or payment provider — GCash and Maya are typically instant, while card refunds can take 5–10 business days.</p>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span class="faq-q-txt">Do I need the original packaging to return an item?</span>
+                    <div class="faq-icon">+</div>
+                </div>
+                <p class="faq-a">Original packaging is preferred but not required. What matters is that the item is packed securely enough not to be damaged in transit, and that your return reference number is included inside the parcel.</p>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span class="faq-q-txt">Can I return an item bought during a sale or promo?</span>
+                    <div class="faq-icon">+</div>
+                </div>
+                <p class="faq-a">Sale items are eligible for return only if they arrive defective, damaged, or are the wrong item. Change-of-mind returns are not accepted on discounted or promotional items.</p>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span class="faq-q-txt">What if my item was lost in transit?</span>
+                    <div class="faq-icon">+</div>
+                </div>
+                <p class="faq-a">If your tracking shows no movement for more than 7 days, or if your package is marked delivered but not received, contact us within 48 hours. We'll investigate with the courier and issue a full refund or reship at no cost to you.</p>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span class="faq-q-txt">How do I track my return shipment?</span>
+                    <div class="faq-icon">+</div>
+                </div>
+                <p class="faq-a">We recommend using a tracked courier when sending your return. Keep the tracking number and send it to us so we can monitor the shipment and process your refund as soon as it arrives.</p>
+            </div>
+        </div>
+
+    </div><!-- /main-left -->
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="sb-sec">
+            <div class="sb-title">RETURN WINDOW</div>
+            <div class="sb-body">You have <strong>30 days</strong> from the date of delivery to submit a return request. After 30 days, we are unable to process returns or exchanges.</div>
+        </div>
+        <div class="sb-sec">
+            <div class="sb-title">ITEM CONDITION</div>
+            <div class="sb-body">Returned items must meet these conditions to be accepted:</div>
+            <div class="sb-list">
+                <div class="sb-li">Unworn and unwashed</div>
+                <div class="sb-li">Original tags still attached</div>
+                <div class="sb-li">No signs of use, staining, or odor</div>
+                <div class="sb-li">In original or similar packaging</div>
+                <div class="sb-li">Return reference number included</div>
+            </div>
+        </div>
+        <div class="sb-sec">
+            <div class="sb-title">NON-RETURNABLE</div>
+            <div class="sb-body">The following cannot be returned under any circumstances:</div>
+            <div class="sb-list">
+                <div class="sb-li">Items worn, washed, or altered</div>
+                <div class="sb-li">Items with tags removed</div>
+                <div class="sb-li">Change of mind purchases</div>
+                <div class="sb-li">Customized or personalized orders</div>
+            </div>
+        </div>
+        <div class="sb-sec">
+            <div class="sb-title">NEED HELP?</div>
+            <div class="sb-body">Can't find your answer above? Our team responds within 24 hours.</div>
+            <a href="contact.html" class="cta-btn"><span>Contact Support</span><span>→</span></a>
+            <a href="shipping-info.html" class="cta-ghost"><span>Shipping Info</span><span>→</span></a>
+        </div>
+    </div>
+
+</div><!-- /main-grid -->
+
+<!-- ════════════════════════════
+     RETURN REQUEST FORM
+════════════════════════════ -->
+<div class="form-section reveal">
+    <div class="sec-row"><div class="sec-dot"></div><span class="sec-t">Submit a Return Request</span></div>
+    <div class="form-wrap">
+
+        <!-- FORM -->
+        <div class="form-col">
+            <div class="form-title">RETURN REQUEST</div>
+            <p class="form-sub">Fill in your details below and we'll get back to you within <strong>1–2 business days</strong> with your return approval and instructions.</p>
+
+            <form id="return-form">
+                <div class="f-row">
+                    <div class="f-grp">
+                        <label class="f-lbl">Full Name</label>
+                        <input type="text" class="f-inp" id="rf-name" placeholder="Your full name" required>
+                    </div>
+                    <div class="f-grp">
+                        <label class="f-lbl">Email Address</label>
+                        <input type="email" class="f-inp" id="rf-email" placeholder="you@email.com" required>
+                    </div>
+                </div>
+                <div class="f-row">
+                    <div class="f-grp">
+                        <label class="f-lbl">Order Number</label>
+                        <input type="text" class="f-inp" id="rf-order" placeholder="e.g. ASC-482931" required>
+                    </div>
+                    <div class="f-grp">
+                        <label class="f-lbl">Phone Number</label>
+                        <input type="tel" class="f-inp" id="rf-phone" placeholder="+63 9XX XXX XXXX">
+                    </div>
+                </div>
+                <div class="f-grp">
+                    <label class="f-lbl">Item to Return</label>
+                    <input type="text" class="f-inp" id="rf-item" placeholder="e.g. Skull Clan Hoodie — Size L" required>
+                </div>
+                <div class="f-row">
+                    <div class="f-grp">
+                        <label class="f-lbl">Return Type</label>
+                        <select class="f-inp" id="rf-type" required>
+                            <option value="">Select type</option>
+                            <option>Refund</option>
+                            <option>Exchange — Different Size</option>
+                            <option>Exchange — Replacement (Same Item)</option>
+                        </select>
+                    </div>
+                    <div class="f-grp">
+                        <label class="f-lbl">Preferred Resolution</label>
+                        <select class="f-inp" id="rf-resolution">
+                            <option value="">Select preference</option>
+                            <option>GCash Refund</option>
+                            <option>Maya Refund</option>
+                            <option>Bank Transfer</option>
+                            <option>Store Credit</option>
+                            <option>Replacement Item</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Reason chips -->
+                <div class="f-grp">
+                    <label class="f-lbl">Reason for Return</label>
+                    <div class="reason-chips" id="reason-chips">
+                        <button type="button" class="reason-chip" data-r="Defective / Damaged">Defective / Damaged</button>
+                        <button type="button" class="reason-chip" data-r="Wrong Item Received">Wrong Item</button>
+                        <button type="button" class="reason-chip" data-r="Wrong Size Sent">Wrong Size Sent</button>
+                        <button type="button" class="reason-chip" data-r="Size Exchange">Size Exchange</button>
+                        <button type="button" class="reason-chip" data-r="Misprint / Print Quality">Misprint</button>
+                        <button type="button" class="reason-chip" data-r="Item Lost in Transit">Lost in Transit</button>
+                        <button type="button" class="reason-chip" data-r="Other">Other</button>
+                    </div>
+                    <input type="hidden" id="rf-reason">
+                </div>
+
+                <!-- Photo upload -->
+                <div class="f-grp">
+                    <label class="f-lbl">Photos of Issue <span style="color:var(--muted);font-weight:300;">(recommended)</span></label>
+                    <div class="upload-area" id="upload-area" onclick="document.getElementById('rf-photos').click()">
+                        <div class="upload-icon">📷</div>
+                        <div class="upload-txt">Click to upload photos <span>or drag & drop</span></div>
+                        <div class="upload-sub">JPG, PNG — max 5MB each · up to 4 photos</div>
+                        <div class="upload-previews" id="upload-previews"></div>
+                    </div>
+                    <input type="file" id="rf-photos" accept="image/*" multiple style="display:none" onchange="handlePhotos(this)">
+                </div>
+
+                <div class="f-grp">
+                    <label class="f-lbl">Additional Details</label>
+                    <textarea class="f-inp" id="rf-details" rows="4" placeholder="Describe the issue in detail. The more we know, the faster we can help."></textarea>
+                </div>
+
+                <button type="submit" class="form-submit">
+                    <span>Submit Return Request</span>
+                    <span>→</span>
+                </button>
+            </form>
+
+            <!-- Success -->
+            <div class="form-success" id="return-success">
+                <div class="fs-check">✓</div>
+                <div class="fs-ref" id="return-ref">Return Ref #RTN-000000</div>
+                <div class="fs-title">REQUEST SUBMITTED</div>
+                <p class="fs-body">Your return request has been received. We'll review it and respond to <strong id="success-email"></strong> within 1–2 business days with your return approval and shipping instructions.</p>
+            </div>
+        </div>
+
+        <!-- FORM INFO SIDEBAR -->
+        <div class="form-info">
+            <div class="fi-sec">
+                <div class="fi-title">WHAT HAPPENS NEXT</div>
+                <div class="fi-body">After submitting you'll receive:</div>
+                <div class="fi-list">
+                    <div class="fi-li">Confirmation email with your return reference number</div>
+                    <div class="fi-li">Approval decision within 1–2 business days</div>
+                    <div class="fi-li">Return shipping address (if approved)</div>
+                    <div class="fi-li">Refund or exchange processed after receipt</div>
+                </div>
+            </div>
+            <div class="fi-sec">
+                <div class="fi-title">PACKING TIPS</div>
+                <div class="fi-body">To ensure your return is accepted:</div>
+                <div class="fi-list">
+                    <div class="fi-li">Keep the item folded flat as received</div>
+                    <div class="fi-li">Do not remove tags before return is approved</div>
+                    <div class="fi-li">Place return reference number visibly inside</div>
+                    <div class="fi-li">Use a padded envelope or small box</div>
+                    <div class="fi-li">Take a photo of the packed item before shipping</div>
+                </div>
+            </div>
+            <div class="fi-sec">
+                <div class="fi-title">CONTACT US DIRECTLY</div>
+                <div class="fi-body">Prefer to reach out first? We're happy to walk you through the process.</div>
+                <a href="contact.html" class="cta-btn" style="margin-top:.8rem;"><span>Go to Contact Page</span><span>→</span></a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- COLLAB BANNER -->
+<div class="collab-s reveal">
+    <div class="cb-l">
+        <span class="cb-ey">A Collaborative Partnership</span>
+        <div class="cb-ti">ASCEND <span class="cb-x">×</span> BREATHDIVINITY</div>
+    </div>
+    <div class="cb-dv"></div>
+    <div class="cb-r">
+        <p class="cb-bo">Born in the streets of the USA, built for the warriors of the Philippines. Two brands. One mission. <strong>From the USA — straight to PH.</strong></p>
+        <span class="cb-fl">USA × Philippines 🇺🇸 → 🇵🇭</span>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <div class="fl">
+        <div class="fl-brand">ASCEND</div>
+        <p class="fl-tag">Premium gymwear & streetwear.<br>From the USA, for the Philippines. 🇺🇸→🇵🇭</p>
+    </div>
+    <div class="fr">
+        <div class="fc">
+            <p class="fc-t">Navigate</p>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+        <div class="fc">
+            <p class="fc-t">Support</p>
+            <ul>
+                <li><a href="returns.html">Returns</a></li>
+                <li><a href="shipping-info.html">Shipping</a></li>
+                <li><a href="sizing-guide.html">Size Guide</a></li>
+                <li><a href="Help.html">Help</a></li>
+            </ul>
+        </div>
+    </div>
+</footer>
+<div class="fbot">
+    <p>© 2026 Ascend Gymwear. All rights reserved.</p>
+    <p>Ascend × breathdivinity — From USA, For PH. 🇵🇭</p>
+</div>
+
+<script>
+/* CURSOR */
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function t(){cur.style.left=mx+'px';cur.style.top=my+'px';rx+=(mx-rx)*.13;ry+=(my-ry)*.13;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(t);})();
+document.addEventListener('mouseover',e=>ring.classList.toggle('xl',!!e.target.closest('a,button,.faq-item,.elig-card,.upload-area')));
+
+/* TICKER */
+[['Return Window','30 Days'],['Defective Items','Full Refund'],
+ ['Size Exchange','1× Free per Order'],['Processing','1–2 Business Days'],
+ ['Lost in Transit','Full Reship'],['Policy','Fair & Transparent'],
+].flatMap(x=>[x,x]).forEach(([l,v])=>{
+    const d=document.createElement('div');d.className='t-item';
+    d.innerHTML=`${l} <b>${v}</b>`;
+    document.getElementById('t-track').appendChild(d);
+});
+
+/* FAQ ACCORDION */
+document.querySelectorAll('.faq-item').forEach(item=>{
+    item.querySelector('.faq-q').addEventListener('click',()=>{
+        const isOpen=item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(i=>{
+            i.classList.remove('open');
+            i.querySelector('.faq-icon').textContent='+';
+        });
+        if(!isOpen){
+            item.classList.add('open');
+            item.querySelector('.faq-icon').textContent='−';
+        }
+    });
+});
+
+/* REASON CHIPS */
+let selectedReason='';
+document.querySelectorAll('.reason-chip').forEach(chip=>{
+    chip.addEventListener('click',()=>{
+        document.querySelectorAll('.reason-chip').forEach(c=>c.classList.remove('sel'));
+        chip.classList.add('sel');
+        selectedReason=chip.dataset.r;
+        document.getElementById('rf-reason').value=selectedReason;
+    });
+});
+
+/* PHOTO UPLOAD PREVIEW */
+function handlePhotos(input){
+    const prev=document.getElementById('upload-previews');
+    prev.innerHTML='';
+    const files=Array.from(input.files).slice(0,4);
+    files.forEach(file=>{
+        const reader=new FileReader();
+        reader.onload=e=>{
+            const img=document.createElement('img');
+            img.className='upload-prev-img';
+            img.src=e.target.result;
+            prev.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+/* Drag & drop on upload area */
+const uploadArea=document.getElementById('upload-area');
+uploadArea.addEventListener('dragover',e=>{e.preventDefault();uploadArea.style.borderColor='var(--accent)';});
+uploadArea.addEventListener('dragleave',()=>{uploadArea.style.borderColor='';});
+uploadArea.addEventListener('drop',e=>{
+    e.preventDefault();uploadArea.style.borderColor='';
+    const dt=e.dataTransfer;
+    if(dt.files.length){
+        document.getElementById('rf-photos').files=dt.files;
+        handlePhotos({files:dt.files});
+    }
+});
+
+/* RETURN FORM SUBMIT */
+document.getElementById('return-form').addEventListener('submit',e=>{
+    e.preventDefault();
+    if(!selectedReason){
+        alert('Please select a reason for your return.');
+        return;
+    }
+    const email=document.getElementById('rf-email').value;
+    const ref='RTN-'+Math.floor(100000+Math.random()*900000);
+    document.getElementById('return-ref').textContent='Return Ref #'+ref;
+    document.getElementById('success-email').textContent=email;
+    document.getElementById('return-form').style.display='none';
+    document.getElementById('return-success').classList.add('vis');
+    window.scrollTo({top:document.getElementById('return-success').offsetTop-100,behavior:'smooth'});
+});
+
+/* SCROLL REVEAL */
+const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+},{threshold:.05});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

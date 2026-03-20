@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="AscendLogo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shipping Info | Ascend × breathdivinity</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+    <style>
+        :root{--black:#080808;--white:#f4f4ef;--mid:#0f0f0f;--border:#1c1c1c;--muted:#484848;--accent:#c8c8c0;}
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+        html{scroll-behavior:smooth;}
+        body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;cursor:none;}
+        .cur{width:8px;height:8px;background:var(--white);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+        .cur-ring{width:34px;height:34px;border:1px solid rgba(244,244,239,.28);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .25s,height .25s,border-color .25s;}
+        .cur-ring.xl{width:64px;height:64px;border-color:rgba(244,244,239,.5);}
+        nav{position:fixed;top:0;left:0;right:0;height:64px;display:grid;grid-template-columns:220px 1fr 220px;align-items:center;padding:0 2.5rem;background:rgba(8,8,8,.97);border-bottom:1px solid var(--border);z-index:400;}
+        .nav-brand{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:5px;color:var(--white);text-decoration:none;}
+        .nav-center{display:flex;justify-content:center;gap:2.5rem;list-style:none;}
+        .nav-center a{font-size:.68rem;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;}
+        .nav-center a:hover{color:var(--white);}
+        .nav-right{display:flex;justify-content:flex-end;}
+        .nav-cta{font-size:.65rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--black);background:var(--white);text-decoration:none;padding:.5rem 1.3rem;border-radius:1px;transition:background .2s;}
+        .nav-cta:hover{background:var(--accent);}
+        .ticker{margin-top:64px;height:32px;border-bottom:1px solid var(--border);overflow:hidden;display:flex;align-items:center;}
+        .t-track{display:flex;animation:tRoll 28s linear infinite;white-space:nowrap;}
+        .t-item{font-size:.56rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);padding:0 2.4rem;border-right:1px solid var(--border);display:flex;align-items:center;height:32px;flex-shrink:0;}
+        .t-item b{color:var(--white);font-weight:500;margin-left:.4rem;}
+        @keyframes tRoll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+        .page-header{min-height:40vh;display:flex;flex-direction:column;justify-content:flex-end;padding:5rem;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+        .page-header::before{content:'SHIPPING';position:absolute;right:-1rem;top:50%;transform:translateY(-50%);font-family:'Bebas Neue',sans-serif;font-size:clamp(5rem,13vw,15rem);letter-spacing:-.02em;color:rgba(244,244,239,.022);pointer-events:none;white-space:nowrap;line-height:1;}
+        .ph-inner{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:flex-end;position:relative;z-index:1;}
+        .ph-eyebrow{font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:1.4rem;display:flex;align-items:center;gap:.8rem;}
+        .ph-eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--muted);}
+        .ph-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.5rem,6.5vw,7rem);line-height:.88;letter-spacing:3px;}
+        .ph-title .outline{color:transparent;-webkit-text-stroke:1.5px var(--white);}
+        .ph-desc{font-size:.86rem;color:var(--muted);line-height:1.95;max-width:400px;padding-bottom:.3rem;}
+        .ph-desc strong{color:var(--accent);font-weight:500;}
+
+        .quick-stats{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border);}
+        .qs-block{padding:2rem 2.5rem;border-right:1px solid var(--border);transition:background .25s;}
+        .qs-block:last-child{border-right:none;}
+        .qs-block:hover{background:var(--mid);}
+        .qs-icon{font-size:1.2rem;margin-bottom:.6rem;filter:grayscale(1);}
+        .qs-val{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:2px;line-height:1;margin-bottom:.25rem;}
+        .qs-label{font-size:.54rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);}
+
+        .main-grid{display:grid;grid-template-columns:1fr 320px;border-bottom:1px solid var(--border);align-items:start;}
+        .main-left{border-right:1px solid var(--border);}
+
+        .sec-row{padding:1.1rem 2.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.8rem;}
+        .sec-row-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;}
+        .sec-row-t{font-size:.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);}
+
+        .shipping-options{padding:2.5rem;}
+        .ship-option{display:grid;grid-template-columns:1fr auto;align-items:center;gap:2rem;padding:1.8rem 0;border-bottom:1px solid var(--border);}
+        .ship-option:last-child{border-bottom:none;}
+        .ship-name{font-size:.92rem;font-weight:600;margin-bottom:.3rem;}
+        .ship-desc{font-size:.75rem;color:var(--muted);line-height:1.65;}
+        .ship-right{text-align:right;flex-shrink:0;}
+        .ship-time{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:2px;line-height:1;margin-bottom:.25rem;}
+        .ship-price{font-size:.7rem;color:var(--muted);letter-spacing:1px;}
+        .ship-price.free{color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:2px;}
+
+        .coverage-table{width:100%;border-collapse:collapse;}
+        .coverage-table th{font-size:.54rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);font-weight:500;padding:.9rem 1.2rem;text-align:left;border-bottom:1px solid var(--border);}
+        .coverage-table td{font-size:.82rem;padding:.85rem 1.2rem;border-bottom:1px solid var(--border);transition:background .2s;}
+        .coverage-table tr:last-child td{border-bottom:none;}
+        .coverage-table tbody tr:hover td{background:var(--mid);}
+        .region-badge{display:inline-block;font-size:.52rem;letter-spacing:1.5px;text-transform:uppercase;border:1px solid var(--border);padding:.2rem .55rem;border-radius:1px;color:var(--muted);margin-left:.5rem;}
+        .status-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:.5rem;vertical-align:middle;}
+        .status-dot.active{background:#4caf50;}
+        .status-dot.limited{background:#ff9800;}
+
+        .timeline{padding:2.5rem;}
+        .timeline-step{display:grid;grid-template-columns:40px 1fr;gap:1.2rem;padding-bottom:2rem;position:relative;}
+        .timeline-step:last-child{padding-bottom:0;}
+        .timeline-step:not(:last-child)::after{content:'';position:absolute;left:19px;top:40px;bottom:0;width:1px;background:var(--border);}
+        .step-num{width:40px;height:40px;flex-shrink:0;border:1px solid var(--border);border-radius:1px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:1px;color:var(--muted);background:var(--black);z-index:1;}
+        .step-num.done{border-color:var(--white);color:var(--white);}
+        .step-body{padding-top:.4rem;}
+        .step-title{font-size:.85rem;font-weight:600;margin-bottom:.3rem;}
+        .step-desc{font-size:.74rem;color:var(--muted);line-height:1.75;}
+        .step-time{font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-top:.3rem;}
+
+        .sidebar{padding:2.5rem 2rem;}
+        .sb-section{margin-bottom:2rem;padding-bottom:2rem;border-bottom:1px solid var(--border);}
+        .sb-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+        .sb-title{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:3px;margin-bottom:.5rem;}
+        .sb-body{font-size:.76rem;color:var(--muted);line-height:1.85;}
+        .sb-body strong{color:var(--accent);font-weight:500;}
+        .pay-methods{display:flex;flex-direction:column;gap:.6rem;margin-top:1rem;}
+        .pay-method{display:flex;align-items:center;gap:.8rem;padding:.7rem 1rem;border:1px solid var(--border);border-radius:1px;transition:border-color .2s,background .2s;}
+        .pay-method:hover{border-color:var(--accent);background:rgba(200,200,192,.04);}
+        .pay-icon{font-size:1rem;filter:grayscale(1);}
+        .pay-name{font-size:.76rem;font-weight:500;}
+        .pay-note{font-size:.62rem;color:var(--muted);margin-left:auto;}
+        .info-list{display:flex;flex-direction:column;gap:.5rem;margin-top:.8rem;}
+        .info-list-item{display:flex;gap:.8rem;align-items:flex-start;font-size:.75rem;color:var(--muted);line-height:1.65;}
+        .info-list-item::before{content:'—';color:var(--border);flex-shrink:0;margin-top:.05rem;}
+        .cta-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:.9rem 1.2rem;background:var(--white);color:var(--black);font-family:'DM Sans',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;text-decoration:none;border-radius:1px;cursor:none;transition:background .2s;margin-top:1rem;border:none;}
+        .cta-btn:hover{background:var(--accent);}
+        .cta-btn-ghost{display:flex;align-items:center;justify-content:space-between;width:100%;padding:.9rem 1.2rem;background:transparent;color:var(--white);font-family:'DM Sans',sans-serif;font-size:.65rem;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;text-decoration:none;border-radius:1px;cursor:none;border:1px solid var(--border);transition:border-color .2s;margin-top:.6rem;}
+        .cta-btn-ghost:hover{border-color:var(--accent);}
+
+        .collab-banner{display:grid;grid-template-columns:1fr 1px 1fr;border-bottom:1px solid var(--border);min-height:180px;}
+        .cb-left{padding:3rem 4rem;display:flex;flex-direction:column;justify-content:center;gap:.6rem;}
+        .cb-eyebrow{font-size:.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);}
+        .cb-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,3vw,3rem);letter-spacing:4px;line-height:1;}
+        .cb-x{color:var(--muted);}
+        .cb-divider{background:var(--border);}
+        .cb-right{padding:3rem 4rem;display:flex;flex-direction:column;justify-content:center;gap:.7rem;}
+        .cb-body{font-size:.8rem;color:var(--muted);line-height:1.9;font-style:italic;font-weight:300;}
+        .cb-body strong{color:var(--accent);font-weight:500;font-style:normal;}
+        .cb-flag{font-size:.58rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.6rem;}
+        .cb-flag::before{content:'';display:block;width:20px;height:1px;background:var(--muted);}
+
+        footer{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--border);}
+        .fl{padding:3.5rem 4rem;border-right:1px solid var(--border);}
+        .fl-brand{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:6px;margin-bottom:.6rem;}
+        .fl-tag{font-size:.72rem;color:var(--muted);line-height:1.8;}
+        .fr{display:grid;grid-template-columns:1fr 1fr;}
+        .fc{padding:3.5rem 2.5rem;border-right:1px solid var(--border);}
+        .fc:last-child{border-right:none;}
+        .fc-t{font-size:.56rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:1.2rem;}
+        .fc ul{list-style:none;display:flex;flex-direction:column;gap:.7rem;}
+        .fc a{font-size:.76rem;color:var(--white);text-decoration:none;opacity:.38;transition:opacity .2s;}
+        .fc a:hover{opacity:1;}
+        .fbot{padding:1.2rem 4rem;display:flex;justify-content:space-between;border-top:1px solid var(--border);}
+        .fbot p{font-size:.58rem;color:var(--muted);letter-spacing:1px;}
+        .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease;}
+        .reveal.visible{opacity:1;transform:translateY(0);}
+        ::-webkit-scrollbar{width:3px;}
+        ::-webkit-scrollbar-track{background:var(--black);}
+        ::-webkit-scrollbar-thumb{background:var(--border);}
+        @media(max-width:1024px){
+            nav{grid-template-columns:auto 1fr auto;padding:0 1.2rem;}
+            .page-header{padding:3rem 2rem;}
+            .ph-inner{grid-template-columns:1fr;gap:2rem;}
+            .quick-stats{grid-template-columns:1fr 1fr;}
+            .main-grid{grid-template-columns:1fr;}
+            .main-left{border-right:none;border-bottom:1px solid var(--border);}
+            .collab-banner{grid-template-columns:1fr;}
+            .cb-divider{height:1px;width:100%;}
+            footer{grid-template-columns:1fr;}
+            .fl{border-right:none;border-bottom:1px solid var(--border);}
+            .fbot{flex-direction:column;gap:.4rem;}
+        }
+    </style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+<div class="cur-ring" id="cur-ring"></div>
+
+<nav>
+    <div><a href="index.html" class="nav-brand"><img src="data:image/png;base64,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" alt="Ascend" style="height:28px;width:auto;object-fit:contain;display:inline-block;vertical-align:middle;margin-right:6px;">ASCEND</a></div>
+    <ul class="nav-center">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-right"><a href="shop.html" class="nav-cta">Shop Now</a></div>
+</nav>
+
+<div class="ticker"><div class="t-track" id="t-track"></div></div>
+
+<div class="page-header">
+    <div class="ph-inner">
+        <div>
+            <p class="ph-eyebrow">Ascend × breathdivinity</p>
+            <h1 class="ph-title">SHIPPING<br><span class="outline">INFO.</span></h1>
+        </div>
+        <p class="ph-desc">We dispatch from <strong>Manila, Philippines</strong> within 24 hours of your order. Nationwide delivery, fast handling, and free shipping on orders over ₱2,000. Here's everything you need to know.</p>
+    </div>
+</div>
+
+<div class="quick-stats reveal">
+    <div class="qs-block"><div class="qs-icon">⚡</div><div class="qs-val">24H</div><div class="qs-label">Dispatch Time</div></div>
+    <div class="qs-block"><div class="qs-icon">🚚</div><div class="qs-val">3–5</div><div class="qs-label">Days Delivery</div></div>
+    <div class="qs-block"><div class="qs-icon">📦</div><div class="qs-val">FREE</div><div class="qs-label">Over ₱2,000</div></div>
+    <div class="qs-block"><div class="qs-icon">🇵🇭</div><div class="qs-val">ALL</div><div class="qs-label">Nationwide Coverage</div></div>
+</div>
+
+<div class="main-grid reveal">
+    <div class="main-left">
+
+        <div class="sec-row"><div class="sec-row-dot"></div><span class="sec-row-t">Shipping Options</span></div>
+        <div class="shipping-options">
+            <div class="ship-option">
+                <div><div class="ship-name">Standard Delivery</div><div class="ship-desc">Available nationwide. Your order is carefully packed and handed to our courier partner within 24 hours of payment confirmation.</div></div>
+                <div class="ship-right"><div class="ship-time">3–5 Days</div><div class="ship-price">₱99 – ₱149</div></div>
+            </div>
+            <div class="ship-option">
+                <div><div class="ship-name">Free Shipping</div><div class="ship-desc">Automatically applied at checkout when your order total reaches ₱2,000 or more. No code needed.</div></div>
+                <div class="ship-right"><div class="ship-time">3–5 Days</div><div class="ship-price free">FREE</div></div>
+            </div>
+            <div class="ship-option">
+                <div><div class="ship-name">Express Delivery — Metro Manila</div><div class="ship-desc">Same-day or next-day delivery available within Metro Manila only. Order must be placed before 10AM.</div></div>
+                <div class="ship-right"><div class="ship-time">1–2 Days</div><div class="ship-price">₱199 – ₱249</div></div>
+            </div>
+            <div class="ship-option">
+                <div><div class="ship-name">Cash on Delivery (COD)</div><div class="ship-desc">Pay when your package arrives. Available in most areas across the Philippines. COD fee may apply depending on location.</div></div>
+                <div class="ship-right"><div class="ship-time">3–7 Days</div><div class="ship-price">₱149 + COD fee</div></div>
+            </div>
+        </div>
+
+        <div class="sec-row"><div class="sec-row-dot"></div><span class="sec-row-t">Delivery Coverage by Region</span></div>
+        <table class="coverage-table">
+            <thead><tr><th>Region</th><th>Est. Delivery</th><th>Status</th><th>COD</th></tr></thead>
+            <tbody>
+                <tr><td>Metro Manila <span class="region-badge">NCR</span></td><td>1–3 Days</td><td><span class="status-dot active"></span>Active</td><td>✓ Available</td></tr>
+                <tr><td>Luzon — Major Cities</td><td>2–4 Days</td><td><span class="status-dot active"></span>Active</td><td>✓ Available</td></tr>
+                <tr><td>Luzon — Provincial</td><td>3–5 Days</td><td><span class="status-dot active"></span>Active</td><td>✓ Available</td></tr>
+                <tr><td>Visayas — Major Cities</td><td>3–5 Days</td><td><span class="status-dot active"></span>Active</td><td>✓ Available</td></tr>
+                <tr><td>Visayas — Islands</td><td>4–6 Days</td><td><span class="status-dot limited"></span>Limited</td><td>— Check on checkout</td></tr>
+                <tr><td>Mindanao — Major Cities</td><td>4–6 Days</td><td><span class="status-dot active"></span>Active</td><td>✓ Available</td></tr>
+                <tr><td>Mindanao — Provincial</td><td>5–7 Days</td><td><span class="status-dot limited"></span>Limited</td><td>— Check on checkout</td></tr>
+                <tr><td>BARMM / Sulu / Tawi-Tawi</td><td>6–10 Days</td><td><span class="status-dot limited"></span>Limited</td><td>— Not available</td></tr>
+            </tbody>
+        </table>
+
+        <div class="sec-row"><div class="sec-row-dot"></div><span class="sec-row-t">Order Process</span></div>
+        <div class="timeline">
+            <div class="timeline-step"><div class="step-num done">1</div><div class="step-body"><div class="step-title">Order Placed</div><div class="step-desc">You complete checkout and receive a confirmation email with your order number and summary.</div><div class="step-time">Instant</div></div></div>
+            <div class="timeline-step"><div class="step-num done">2</div><div class="step-body"><div class="step-title">Payment Verified</div><div class="step-desc">GCash, card, or Maya payments are verified within minutes. COD is confirmed upon dispatch.</div><div class="step-time">Within 1 hour</div></div></div>
+            <div class="timeline-step"><div class="step-num done">3</div><div class="step-body"><div class="step-title">Packed & Dispatched</div><div class="step-desc">Your order is carefully packed and handed to our courier. You'll receive a tracking number via email or SMS.</div><div class="step-time">Within 24 hours</div></div></div>
+            <div class="timeline-step"><div class="step-num">4</div><div class="step-body"><div class="step-title">In Transit</div><div class="step-desc">Your package is on its way. Track using the number sent to you. Delivery times vary by region.</div><div class="step-time">3–7 Business Days</div></div></div>
+            <div class="timeline-step"><div class="step-num">5</div><div class="step-body"><div class="step-title">Delivered</div><div class="step-desc">Package arrives at your door. For COD, payment is collected on delivery. Inspect your order upon receipt.</div><div class="step-time">Completion</div></div></div>
+        </div>
+
+    </div>
+
+    <div class="sidebar">
+        <div class="sb-section">
+            <div class="sb-title">PAYMENT METHODS</div>
+            <div class="sb-body">We accept all major payment options.</div>
+            <div class="pay-methods">
+                <div class="pay-method"><span class="pay-icon">💵</span><span class="pay-name">Cash on Delivery</span><span class="pay-note">COD</span></div>
+                <div class="pay-method"><span class="pay-icon">📱</span><span class="pay-name">GCash</span><span class="pay-note">Instant</span></div>
+                <div class="pay-method"><span class="pay-icon">📱</span><span class="pay-name">Maya</span><span class="pay-note">Instant</span></div>
+                <div class="pay-method"><span class="pay-icon">💳</span><span class="pay-name">Credit / Debit Card</span><span class="pay-note">Visa · MC</span></div>
+            </div>
+        </div>
+        <div class="sb-section">
+            <div class="sb-title">PACKAGING</div>
+            <div class="sb-body">Every order is packed securely to protect the garment and its graphics in transit. <strong>All breathdivinity pieces are folded flat</strong> inside a sealed poly mailer with a branded inner wrap.</div>
+        </div>
+        <div class="sb-section">
+            <div class="sb-title">IMPORTANT NOTES</div>
+            <div class="info-list">
+                <div class="info-list-item">Orders placed on weekends or holidays are dispatched the next business day.</div>
+                <div class="info-list-item">Delivery times are estimates — actual times may vary during peak seasons or bad weather.</div>
+                <div class="info-list-item">We are not responsible for delays caused by the courier once dispatched.</div>
+                <div class="info-list-item">Ensure your address and contact number are correct before completing checkout.</div>
+                <div class="info-list-item">If your package is marked delivered but not received, contact us within 48 hours.</div>
+            </div>
+        </div>
+        <div class="sb-section">
+            <div class="sb-title">TRACK YOUR ORDER</div>
+            <div class="sb-body">Your tracking number will be sent via email once dispatched.</div>
+            <a href="contact.html" class="cta-btn"><span>Contact for Tracking Help</span><span>→</span></a>
+            <a href="shop.html" class="cta-btn-ghost"><span>Back to Shop</span><span>→</span></a>
+        </div>
+    </div>
+</div>
+
+<div class="collab-banner reveal">
+    <div class="cb-left">
+        <span class="cb-eyebrow">A Collaborative Partnership</span>
+        <div class="cb-title">ASCEND <span class="cb-x">×</span> BREATHDIVINITY</div>
+    </div>
+    <div class="cb-divider"></div>
+    <div class="cb-right">
+        <p class="cb-body">Born in the streets of the USA, built for the warriors of the Philippines. Two brands. One mission. <strong>From the USA — straight to PH.</strong></p>
+        <span class="cb-flag">USA × Philippines 🇺🇸 → 🇵🇭</span>
+    </div>
+</div>
+
+<footer>
+    <div class="fl">
+        <div class="fl-brand">ASCEND</div>
+        <p class="fl-tag">Premium gymwear & streetwear.<br>From the USA, for the Philippines. 🇺🇸→🇵🇭</p>
+    </div>
+    <div class="fr">
+        <div class="fc">
+            <p class="fc-t">Navigate</p>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+        <div class="fc">
+            <p class="fc-t">Support</p>
+            <ul>
+                <li><a href="sizing-guide.html">Size Guide</a></li>
+                <li><a href="shipping-info.html">Shipping Info</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="#">Returns</a></li>
+            </ul>
+        </div>
+    </div>
+</footer>
+<div class="fbot">
+    <p>© 2024 Ascend Gymwear. All rights reserved.</p>
+    <p>Ascend × breathdivinity — From USA, For PH. 🇵🇭</p>
+</div>
+
+<script>
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function t(){cur.style.left=mx+'px';cur.style.top=my+'px';rx+=(mx-rx)*.13;ry+=(my-ry)*.13;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(t);})();
+document.addEventListener('mouseover',e=>ring.classList.toggle('xl',!!e.target.closest('a,button,.pay-method,.ship-option')));
+[['Dispatch','Within 24 Hours'],['Standard','3–5 Business Days'],['Free Shipping','Orders Over ₱2,000'],['Express','Metro Manila 1–2 Days'],['COD','Cash on Delivery Available'],['Coverage','Nationwide Philippines 🇵🇭'],].flatMap(x=>[x,x]).forEach(([l,v])=>{const d=document.createElement('div');d.className='t-item';d.innerHTML=`${l} <b>${v}</b>`;document.getElementById('t-track').appendChild(d);});
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.06});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

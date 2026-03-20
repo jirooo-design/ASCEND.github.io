@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="AscendLogo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Ascend × breathdivinity</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+    <style>
+        :root{--black:#080808;--white:#f4f4ef;--mid:#0f0f0f;--border:#1c1c1c;--muted:#484848;--accent:#c8c8c0;}
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+        html{scroll-behavior:smooth;}
+        body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;cursor:none;}
+        .cur{width:8px;height:8px;background:var(--white);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+        .cur-ring{width:34px;height:34px;border:1px solid rgba(244,244,239,.28);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .25s,height .25s,border-color .25s;}
+        .cur-ring.xl{width:64px;height:64px;border-color:rgba(244,244,239,.5);}
+
+        /* NAV */
+        nav{position:fixed;top:0;left:0;right:0;height:64px;display:grid;grid-template-columns:200px 1fr 200px;align-items:center;padding:0 2.5rem;background:rgba(8,8,8,.97);border-bottom:1px solid var(--border);z-index:400;}
+        .nav-brand{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:5px;color:var(--white);text-decoration:none;}
+        .nav-steps{display:flex;justify-content:center;align-items:center;gap:.5rem;list-style:none;}
+        .nav-step{font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:.3rem .7rem;border:1px solid transparent;border-radius:1px;transition:all .2s;}
+        .nav-step.active{color:var(--white);border-color:var(--border);}
+        .nav-step.done{color:var(--accent);border-color:transparent;}
+        .nav-sep{color:var(--border);font-size:.65rem;}
+        .nav-right{display:flex;justify-content:flex-end;}
+        .nav-back{font-size:.62rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:.45rem 1.1rem;border:1px solid var(--border);border-radius:1px;transition:color .2s,border-color .2s;}
+        .nav-back:hover{color:var(--white);border-color:var(--muted);}
+
+        /* TICKER */
+        .ticker{margin-top:64px;height:32px;border-bottom:1px solid var(--border);overflow:hidden;display:flex;align-items:center;}
+        .t-track{display:flex;animation:tRoll 28s linear infinite;white-space:nowrap;}
+        .t-item{font-size:.56rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);padding:0 2.4rem;border-right:1px solid var(--border);display:flex;align-items:center;height:32px;flex-shrink:0;}
+        .t-item b{color:var(--white);font-weight:500;margin-left:.4rem;}
+        @keyframes tRoll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+        /* HEADER */
+        .page-hdr{
+            padding:3rem 3rem 2.5rem;border-bottom:1px solid var(--border);
+            display:flex;align-items:flex-end;justify-content:space-between;
+            position:relative;overflow:hidden;
+        }
+        .page-hdr::before{
+            content:'CHECKOUT';position:absolute;right:-1rem;top:50%;transform:translateY(-50%);
+            font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,10vw,10rem);
+            color:rgba(244,244,239,.025);pointer-events:none;white-space:nowrap;line-height:1;letter-spacing:-.02em;
+        }
+        .hdr-left{position:relative;z-index:1;}
+        .hdr-eyebrow{font-size:.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem;display:flex;align-items:center;gap:.7rem;}
+        .hdr-eyebrow::before{content:'';display:block;width:20px;height:1px;background:var(--muted);}
+        .hdr-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,5vw,4.5rem);letter-spacing:3px;line-height:.9;}
+        .hdr-title .outline{color:transparent;-webkit-text-stroke:1.5px var(--white);}
+        .hdr-right{position:relative;z-index:1;}
+        .cart-summary-pill{display:flex;align-items:center;gap:.8rem;font-size:.62rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);border:1px solid var(--border);padding:.5rem 1.1rem;border-radius:1px;}
+        .csp-count{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:2px;color:var(--white);}
+
+        /* LAYOUT */
+        .main-wrap{display:grid;grid-template-columns:1fr 400px;align-items:start;}
+
+        /* ── STEPS COL ── */
+        .steps-col{border-right:1px solid var(--border);}
+        .step-panel{display:none;}
+        .step-panel.active{display:block;animation:fadeIn .3s ease;}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+        .step-hdr{padding:1.4rem 2.8rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem;}
+        .step-badge{
+            width:32px;height:32px;flex-shrink:0;
+            border:1px solid var(--border);border-radius:1px;
+            display:flex;align-items:center;justify-content:center;
+            font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:1px;color:var(--muted);
+        }
+        .step-badge.on{border-color:var(--white);color:var(--white);}
+        .step-hdr-t{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:3px;}
+
+        .step-body{padding:2.5rem 2.8rem;}
+
+        /* Cart items */
+        .cart-block{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:2rem;}
+        .c-item{
+            background:var(--black);
+            display:grid;grid-template-columns:90px 1fr auto;
+            gap:1.2rem;align-items:center;padding:1.3rem 1.5rem;
+            transition:background .2s;
+        }
+        .c-item:hover{background:var(--mid);}
+        .c-img{
+            width:90px;height:90px;object-fit:cover;
+            border:1px solid var(--border);border-radius:1px;
+            display:block;flex-shrink:0;
+        }
+        .c-img-ph{
+            width:90px;height:90px;flex-shrink:0;
+            border:1px solid var(--border);background:#0a0a0a;
+            display:flex;align-items:center;justify-content:center;font-size:2.2rem;border-radius:1px;
+        }
+        
+        .c-name{font-size:.92rem;font-weight:600;line-height:1.2;margin-bottom:.4rem;}
+        .c-sub{font-size:.68rem;color:var(--muted);margin-bottom:.6rem;}
+        .c-badges{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.7rem;}
+        .c-badge{
+            font-size:.52rem;letter-spacing:1.5px;text-transform:uppercase;
+            border:1px solid var(--border);padding:.18rem .55rem;border-radius:1px;
+            color:var(--accent);
+        }
+        .c-qty{display:flex;align-items:center;gap:.5rem;}
+        .c-qbtn{
+            width:24px;height:24px;border:1px solid var(--border);background:transparent;
+            color:var(--white);font-size:.85rem;cursor:none;border-radius:1px;
+            display:flex;align-items:center;justify-content:center;transition:background .15s;
+        }
+        .c-qbtn:hover{background:var(--border);}
+        .c-qnum{font-size:.82rem;min-width:20px;text-align:center;}
+        .c-right{display:flex;flex-direction:column;align-items:flex-end;gap:.5rem;}
+        .c-price{font-family:'Bebas Neue',sans-serif;font-size:1.25rem;letter-spacing:2px;}
+        .c-unit{font-size:.6rem;color:var(--muted);}
+        .c-rm{background:none;border:none;color:var(--muted);font-size:.56rem;letter-spacing:1.5px;text-transform:uppercase;cursor:none;transition:color .2s;}
+        .c-rm:hover{color:var(--white);}
+
+        /* Empty cart */
+        .empty-wrap{padding:4rem 2rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:1rem;}
+        .empty-ico{font-size:3rem;opacity:.12;}
+        .empty-txt{font-size:.72rem;color:var(--muted);letter-spacing:1px;}
+        .empty-lnk{font-size:.64rem;letter-spacing:2px;text-transform:uppercase;color:var(--accent);text-decoration:none;}
+
+        /* Form */
+        .f-row{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+        .f-grp{margin-bottom:1.6rem;}
+        .f-lbl{display:block;font-size:.54rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:.55rem;}
+        .f-inp{
+            width:100%;background:transparent;border:none;
+            border-bottom:1px solid var(--border);
+            color:var(--white);font-family:'DM Sans',sans-serif;
+            font-size:.88rem;padding:.65rem 0;outline:none;
+            transition:border-color .25s;border-radius:0;
+        }
+        .f-inp:focus{border-bottom-color:var(--accent);}
+        .f-inp::placeholder{color:var(--muted);font-size:.82rem;}
+        .f-inp.err{border-bottom-color:#e53935;}
+        select.f-inp{
+            cursor:none;appearance:none;-webkit-appearance:none;
+            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23484848'/%3E%3C/svg%3E");
+            background-repeat:no-repeat;background-position:right .4rem center;
+        }
+        select.f-inp option{background:var(--black);}
+
+        /* Payment options */
+        .pay-opts{display:flex;flex-direction:column;gap:.7rem;margin-bottom:2rem;}
+        .pay-opt{
+            display:flex;align-items:center;gap:1rem;
+            padding:1rem 1.2rem;border:1px solid var(--border);border-radius:1px;
+            cursor:none;transition:border-color .2s,background .2s;
+        }
+        .pay-opt:hover{border-color:var(--muted);}
+        .pay-opt.sel{border-color:var(--white);background:rgba(244,244,239,.04);}
+        .pay-radio{width:16px;height:16px;border-radius:50%;border:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+        .pay-opt.sel .pay-radio{border-color:var(--white);}
+        .pay-dot{width:8px;height:8px;border-radius:50%;background:var(--white);display:none;}
+        .pay-opt.sel .pay-dot{display:block;}
+        .pay-name{font-size:.84rem;font-weight:500;margin-bottom:.15rem;}
+        .pay-desc{font-size:.68rem;color:var(--muted);}
+        .pay-emo{font-size:1.2rem;filter:grayscale(1);margin-left:auto;flex-shrink:0;}
+        #card-fields{display:none;margin-bottom:1.5rem;padding:1.4rem;border:1px solid var(--border);background:var(--mid);border-radius:1px;}
+
+        /* Nav buttons */
+        .step-nav{display:flex;gap:.8rem;padding-top:1.5rem;border-top:1px solid var(--border);}
+        .btn-next{
+            display:flex;align-items:center;justify-content:space-between;
+            padding:.95rem 1.5rem;background:var(--white);color:var(--black);
+            font-family:'DM Sans',sans-serif;font-size:.65rem;font-weight:700;
+            letter-spacing:2.5px;text-transform:uppercase;
+            border:none;border-radius:1px;cursor:none;flex:1;transition:background .2s;
+        }
+        .btn-next:hover{background:var(--accent);}
+        .btn-prev{
+            display:flex;align-items:center;gap:.5rem;
+            padding:.95rem 1.2rem;background:transparent;color:var(--muted);
+            font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:600;
+            letter-spacing:2px;text-transform:uppercase;
+            border:1px solid var(--border);border-radius:1px;cursor:none;
+            transition:color .2s,border-color .2s;
+        }
+        .btn-prev:hover{color:var(--white);border-color:var(--muted);}
+
+        /* Review block */
+        .review-block{border:1px solid var(--border);border-radius:1px;overflow:hidden;margin-bottom:2rem;}
+        .rv-row{padding:1.1rem 1.4rem;border-bottom:1px solid var(--border);}
+        .rv-row:last-child{border-bottom:none;}
+        .rv-lbl{font-size:.52rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem;}
+        .rv-val{font-size:.85rem;font-weight:500;}
+        .rv-sub{font-size:.72rem;color:var(--muted);margin-top:.2rem;}
+        .rv-items-wrap{padding:.8rem 1.4rem;}
+        .rv-item{
+            display:grid;grid-template-columns:52px 1fr auto;
+            gap:.9rem;align-items:center;
+            padding:.7rem 0;border-bottom:1px solid var(--border);
+        }
+        .rv-item:last-child{border-bottom:none;}
+        .rv-img{width:52px;height:52px;object-fit:cover;border:1px solid var(--border);border-radius:1px;}
+        .rv-img-ph{width:52px;height:52px;border:1px solid var(--border);background:#0a0a0a;display:flex;align-items:center;justify-content:center;font-size:1.2rem;}
+        .rv-iname{font-size:.8rem;font-weight:500;margin-bottom:.2rem;}
+        .rv-imeta{font-size:.62rem;color:var(--muted);}
+        .rv-iprice{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:2px;}
+
+        /* ── SUMMARY COL ── */
+        .summary-col{position:sticky;top:64px;border-left:1px solid var(--border);}
+        .sm-hdr{padding:1.4rem 2rem;border-bottom:1px solid var(--border);}
+        .sm-hdr-t{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:3px;}
+
+        .sm-items{
+            padding:1.5rem 2rem;border-bottom:1px solid var(--border);
+            display:flex;flex-direction:column;gap:1rem;
+            max-height:340px;overflow-y:auto;
+        }
+        .sm-items::-webkit-scrollbar{width:2px;}
+        .sm-items::-webkit-scrollbar-thumb{background:var(--border);}
+
+        .sm-item{display:flex;gap:.9rem;align-items:center;}
+        .sm-img{
+            width:56px;height:56px;object-fit:cover;
+            border:1px solid var(--border);border-radius:1px;flex-shrink:0;
+        }
+        .sm-img-ph{
+            width:56px;height:56px;border:1px solid var(--border);background:#0a0a0a;
+            display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;border-radius:1px;
+        }
+        .sm-info{flex:1;min-width:0;}
+        .sm-name{font-size:.76rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:.15rem;}
+        .sm-meta{font-size:.6rem;color:var(--muted);}
+        .sm-price{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:2px;flex-shrink:0;}
+        .sm-empty{font-size:.72rem;color:var(--muted);padding:1rem 0;text-align:center;}
+
+        .sm-rows{padding:1.4rem 2rem;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:.65rem;}
+        .sm-row{display:flex;justify-content:space-between;align-items:center;}
+        .sm-rl{font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+        .sm-rv{font-size:.82rem;font-weight:500;}
+        .sm-rv.free{color:var(--accent);}
+
+        .sm-total{display:flex;justify-content:space-between;align-items:center;padding:1.4rem 2rem;border-bottom:1px solid var(--border);}
+        .sm-tl{font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+        .sm-tv{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:3px;}
+
+        .promo-wrap{padding:1.2rem 2rem;border-bottom:1px solid var(--border);display:flex;gap:.6rem;align-items:flex-end;}
+        .promo-inp{flex:1;background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:.82rem;padding:.4rem 0;outline:none;transition:border-color .25s;}
+        .promo-inp:focus{border-bottom-color:var(--accent);}
+        .promo-inp::placeholder{color:var(--muted);}
+        .promo-btn{padding:.45rem 1rem;background:transparent;border:1px solid var(--border);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.58rem;letter-spacing:2px;text-transform:uppercase;cursor:none;border-radius:1px;transition:color .2s,border-color .2s;white-space:nowrap;}
+        .promo-btn:hover{color:var(--white);border-color:var(--muted);}
+        .promo-ok{padding:.5rem 2rem;font-size:.6rem;color:var(--accent);letter-spacing:2px;text-transform:uppercase;display:none;border-bottom:1px solid var(--border);}
+
+        .demo-note{margin:1rem 2rem;padding:.75rem 1rem;border:1px solid var(--border);font-size:.6rem;color:var(--muted);line-height:1.65;text-align:center;}
+        .demo-note b{color:var(--accent);}
+        .sm-note{padding:1.2rem 2rem;font-size:.62rem;color:var(--muted);line-height:1.75;}
+        .sm-note b{color:var(--accent);}
+
+        /* ── SUCCESS ── */
+        .success-screen{
+            display:none;padding:5rem 3rem;text-align:center;
+            flex-direction:column;align-items:center;gap:1.5rem;
+        }
+        .success-screen.vis{display:flex;}
+        .success-check{
+            width:68px;height:68px;border:1px solid var(--accent);border-radius:1px;
+            display:flex;align-items:center;justify-content:center;
+            font-size:2rem;color:var(--accent);
+        }
+        .success-onum{font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);}
+        .success-title{font-family:'Bebas Neue',sans-serif;font-size:3.5rem;letter-spacing:4px;line-height:1;}
+        .success-body{font-size:.82rem;color:var(--muted);line-height:1.9;max-width:460px;}
+        .success-body strong{color:var(--accent);font-weight:500;}
+        .success-acts{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:.5rem;}
+        .success-btn{padding:.9rem 2.2rem;background:var(--white);color:var(--black);font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;text-decoration:none;border-radius:1px;transition:background .2s;}
+        .success-btn:hover{background:var(--accent);}
+        .success-btn-g{padding:.9rem 2.2rem;background:transparent;color:var(--white);font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-decoration:none;border:1px solid var(--border);border-radius:1px;transition:border-color .2s;}
+        .success-btn-g:hover{border-color:var(--muted);}
+
+        ::-webkit-scrollbar{width:3px;}
+        ::-webkit-scrollbar-track{background:var(--black);}
+        ::-webkit-scrollbar-thumb{background:var(--border);}
+
+        @media(max-width:960px){
+            nav{grid-template-columns:auto 1fr auto;padding:0 1.2rem;}
+            .nav-steps{display:none;}
+            .main-wrap{grid-template-columns:1fr;}
+            .steps-col{border-right:none;border-bottom:1px solid var(--border);}
+            .summary-col{position:static;border-left:none;border-top:1px solid var(--border);}
+            .f-row{grid-template-columns:1fr;}
+            .step-body{padding:2rem 1.5rem;}
+            .page-hdr{padding:2rem 1.5rem;flex-direction:column;align-items:flex-start;gap:1rem;}
+        }
+    </style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+<div class="cur-ring" id="cur-ring"></div>
+
+<nav>
+    <div><a href="index.html" class="nav-brand"><img src="data:image/png;base64,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" alt="Ascend" style="height:28px;width:auto;object-fit:contain;display:inline-block;vertical-align:middle;margin-right:6px;">ASCEND</a></div>
+    <ul class="nav-steps">
+        <li><span class="nav-step active" id="ns1">01 · Cart</span></li>
+        <li><span class="nav-sep">›</span></li>
+        <li><span class="nav-step" id="ns2">02 · Details</span></li>
+        <li><span class="nav-sep">›</span></li>
+        <li><span class="nav-step" id="ns3">03 · Payment</span></li>
+        <li><span class="nav-sep">›</span></li>
+        <li><span class="nav-step" id="ns4">04 · Confirm</span></li>
+    </ul>
+    <div class="nav-right"><a href="shop.html" class="nav-back">← Shop</a></div>
+</nav>
+
+<div class="ticker"><div class="t-track" id="t-track"></div></div>
+
+<div class="page-hdr">
+    <div class="hdr-left">
+        <p class="hdr-eyebrow">Ascend × breathdivinity</p>
+        <h1 class="hdr-title">CHECK<span class="outline">OUT.</span></h1>
+    </div>
+    <div class="hdr-right">
+        <div class="cart-summary-pill">
+            <span class="csp-count" id="hdr-count">0</span>
+            <span>item(s) in cart</span>
+        </div>
+    </div>
+</div>
+
+<div class="main-wrap">
+
+    <!-- ══ LEFT ══ -->
+    <div class="steps-col">
+
+        <!-- SUCCESS -->
+        <div class="success-screen" id="success-screen">
+            <div class="success-check">✓</div>
+            <div class="success-onum" id="success-num">Order #ASC-000000</div>
+            <div class="success-title">ORDER PLACED</div>
+            <p class="success-body">
+                Your order has been confirmed and will be dispatched within <strong>24 hours</strong> from Manila.
+                You'll receive a tracking number via SMS and email once it ships.
+                Thank you for supporting Ascend × breathdivinity. 🇵🇭
+            </p>
+            <div class="success-acts">
+                <a href="shop.html" class="success-btn">Continue Shopping</a>
+                <a href="index.html" class="success-btn-g">Back to Home</a>
+            </div>
+        </div>
+
+        <!-- STEP 1: YOUR CART -->
+        <div class="step-panel active" id="step-1">
+            <div class="step-hdr">
+                <div class="step-badge on">1</div>
+                <span class="step-hdr-t">YOUR CART</span>
+            </div>
+            <div class="step-body">
+                <div class="empty-wrap" id="empty-state" style="display:none;">
+                    <div class="empty-ico">🛒</div>
+                    <div class="empty-txt">Your cart is empty.</div>
+                    <a href="shop.html" class="empty-lnk">← Go back and pick something</a>
+                </div>
+                <div class="cart-block" id="cart-block" style="display:none;"></div>
+                <div class="step-nav">
+                    <button class="btn-next" id="btn1" onclick="toStep(2)">
+                        <span>Continue to Details</span><span>→</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 2: SHIPPING -->
+        <div class="step-panel" id="step-2">
+            <div class="step-hdr">
+                <div class="step-badge on">2</div>
+                <span class="step-hdr-t">SHIPPING DETAILS</span>
+            </div>
+            <div class="step-body">
+                <div class="f-row">
+                    <div class="f-grp"><label class="f-lbl">First Name</label><input type="text" class="f-inp" id="f-fname" placeholder="First" required></div>
+                    <div class="f-grp"><label class="f-lbl">Last Name</label><input type="text" class="f-inp" id="f-lname" placeholder="Last" required></div>
+                </div>
+                <div class="f-row">
+                    <div class="f-grp"><label class="f-lbl">Email Address</label><input type="email" class="f-inp" id="f-email" placeholder="you@email.com" required></div>
+                    <div class="f-grp"><label class="f-lbl">Phone Number</label><input type="tel" class="f-inp" id="f-phone" placeholder="+63 9XX XXX XXXX" required></div>
+                </div>
+                <div class="f-grp"><label class="f-lbl">Complete Address</label><input type="text" class="f-inp" id="f-addr" placeholder="House / Unit No., Street, Barangay" required></div>
+                <div class="f-row">
+                    <div class="f-grp"><label class="f-lbl">City / Municipality</label><input type="text" class="f-inp" id="f-city" placeholder="City" required></div>
+                    <div class="f-grp"><label class="f-lbl">Province</label><input type="text" class="f-inp" id="f-prov" placeholder="Province" required></div>
+                </div>
+                <div class="f-row">
+                    <div class="f-grp">
+                        <label class="f-lbl">Region</label>
+                        <select class="f-inp" id="f-region" required>
+                            <option value="">Select Region</option>
+                            <option>Metro Manila (NCR)</option>
+                            <option>Luzon — Major Cities</option>
+                            <option>Luzon — Provincial</option>
+                            <option>Visayas — Major Cities</option>
+                            <option>Visayas — Islands</option>
+                            <option>Mindanao — Major Cities</option>
+                            <option>Mindanao — Provincial</option>
+                        </select>
+                    </div>
+                    <div class="f-grp"><label class="f-lbl">ZIP Code</label><input type="text" class="f-inp" id="f-zip" placeholder="0000" maxlength="4"></div>
+                </div>
+                <div class="f-grp"><label class="f-lbl">Delivery Notes <span style="color:var(--muted);font-weight:300;">(optional)</span></label><input type="text" class="f-inp" id="f-notes" placeholder="Landmark, gate code, special instructions…"></div>
+                <div class="step-nav">
+                    <button class="btn-prev" onclick="toStep(1)">← Back</button>
+                    <button class="btn-next" onclick="validateStep2()"><span>Continue to Payment</span><span>→</span></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 3: PAYMENT -->
+        <div class="step-panel" id="step-3">
+            <div class="step-hdr">
+                <div class="step-badge on">3</div>
+                <span class="step-hdr-t">PAYMENT METHOD</span>
+            </div>
+            <div class="step-body">
+                <div class="pay-opts">
+                    <div class="pay-opt sel" onclick="selPay(this,'COD')">
+                        <div class="pay-radio"><div class="pay-dot"></div></div>
+                        <div><div class="pay-name">Cash on Delivery (COD)</div><div class="pay-desc">Pay when your package arrives at your door</div></div>
+                        <span class="pay-emo">💵</span>
+                    </div>
+                    <div class="pay-opt" onclick="selPay(this,'GCash')">
+                        <div class="pay-radio"><div class="pay-dot"></div></div>
+                        <div><div class="pay-name">GCash</div><div class="pay-desc">Send payment via GCash — number sent at confirmation</div></div>
+                        <span class="pay-emo">📱</span>
+                    </div>
+                    <div class="pay-opt" onclick="selPay(this,'Maya')">
+                        <div class="pay-radio"><div class="pay-dot"></div></div>
+                        <div><div class="pay-name">Maya</div><div class="pay-desc">Send payment via Maya — number sent at confirmation</div></div>
+                        <span class="pay-emo">📱</span>
+                    </div>
+                    <div class="pay-opt" onclick="selPay(this,'Card')">
+                        <div class="pay-radio"><div class="pay-dot"></div></div>
+                        <div><div class="pay-name">Credit / Debit Card</div><div class="pay-desc">Visa, Mastercard — secure online payment</div></div>
+                        <span class="pay-emo">💳</span>
+                    </div>
+                </div>
+                <div id="card-fields">
+                    <div class="f-grp"><label class="f-lbl">Card Number</label><input type="text" class="f-inp" placeholder="0000 0000 0000 0000" maxlength="19" oninput="fmtCard(this)"></div>
+                    <div class="f-row">
+                        <div class="f-grp"><label class="f-lbl">Expiry</label><input type="text" class="f-inp" placeholder="MM / YY" maxlength="7" oninput="fmtExp(this)"></div>
+                        <div class="f-grp"><label class="f-lbl">CVV</label><input type="text" class="f-inp" placeholder="000" maxlength="3"></div>
+                    </div>
+                    <div class="f-grp"><label class="f-lbl">Cardholder Name</label><input type="text" class="f-inp" placeholder="Name as on card"></div>
+                </div>
+                <div class="step-nav">
+                    <button class="btn-prev" onclick="toStep(2)">← Back</button>
+                    <button class="btn-next" onclick="toStep(4)"><span>Review Order</span><span>→</span></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 4: REVIEW & CONFIRM -->
+        <div class="step-panel" id="step-4">
+            <div class="step-hdr">
+                <div class="step-badge on">4</div>
+                <span class="step-hdr-t">REVIEW & CONFIRM</span>
+            </div>
+            <div class="step-body">
+                <div class="review-block" id="review-block"></div>
+                <div class="step-nav">
+                    <button class="btn-prev" onclick="toStep(3)">← Back</button>
+                    <button class="btn-next" onclick="placeOrder()"><span>Place Order</span><span>✓</span></button>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /steps-col -->
+
+    <!-- ══ RIGHT: LIVE SUMMARY ══ -->
+    <div class="summary-col">
+        <div class="sm-hdr"><div class="sm-hdr-t">ORDER SUMMARY</div></div>
+        <div class="sm-items" id="sm-items"><div class="sm-empty">No items yet.</div></div>
+        <div class="sm-rows">
+            <div class="sm-row"><span class="sm-rl">Subtotal</span><span class="sm-rv" id="sm-sub">₱0</span></div>
+            <div class="sm-row"><span class="sm-rl">Shipping</span><span class="sm-rv" id="sm-ship">₱99</span></div>
+            <div class="sm-row"><span class="sm-rl">Discount</span><span class="sm-rv" id="sm-disc">—</span></div>
+        </div>
+        <div class="sm-total">
+            <span class="sm-tl">Total</span>
+            <span class="sm-tv" id="sm-tot">₱0</span>
+        </div>
+        <div class="promo-wrap">
+            <input type="text" class="promo-inp" id="promo-in" placeholder="Promo code">
+            <button class="promo-btn" onclick="applyPromo()">Apply</button>
+        </div>
+        <div class="promo-ok" id="promo-ok">✓ 10% off applied</div>
+        <div class="demo-note">🇵🇭 <b>Demo only</b> — No actual payment charged.</div>
+        <div class="sm-note">Free shipping on orders over <b>₱2,000</b>. Dispatched within 24h from Manila. 3–5 business days nationwide.</div>
+    </div>
+
+</div>
+
+<script>
+/* CURSOR */
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function t(){cur.style.left=mx+'px';cur.style.top=my+'px';rx+=(mx-rx)*.13;ry+=(my-ry)*.13;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(t);})();
+document.addEventListener('mouseover',e=>ring.classList.toggle('xl',!!e.target.closest('a,button,.pay-opt')));
+
+/* TICKER */
+[['Dispatch','Within 24 Hours'],['Free Shipping','Orders Over ₱2,000'],
+ ['COD','Available Nationwide'],['Returns','30-Day Policy'],
+ ['Collab','breathdivinity × Ascend'],['Coverage','Nationwide PH 🇵🇭'],
+].flatMap(x=>[x,x]).forEach(([l,v])=>{
+    const d=document.createElement('div');d.className='t-item';
+    d.innerHTML=`${l} <b>${v}</b>`;
+    document.getElementById('t-track').appendChild(d);
+});
+
+/* ═══════════════════════════════
+   LOAD CART FROM localStorage
+   Written by shop.html when user clicks "Proceed to Checkout"
+═══════════════════════════════ */
+let cart = [];
+try {
+    const raw = localStorage.getItem('ascend_checkout_cart');
+    if(raw) cart = JSON.parse(raw);
+} catch(e) { cart = []; }
+
+let promoOn  = false;
+let payMethod = 'COD';
+
+/* ─── RENDER CART (Step 1) ─── */
+function renderCart() {
+    const block  = document.getElementById('cart-block');
+    const empty  = document.getElementById('empty-state');
+    const btn    = document.getElementById('btn1');
+    const hdrCt  = document.getElementById('hdr-count');
+
+    const totalItems = cart.reduce((s,c)=>s+c.qty, 0);
+    hdrCt.textContent = totalItems;
+
+    if (!cart.length) {
+        empty.style.display = 'flex';
+        block.style.display = 'none';
+        btn.style.opacity = '.4';
+        btn.style.pointerEvents = 'none';
+        renderSummary();
+        return;
+    }
+
+    empty.style.display = 'none';
+    block.style.display = 'flex';
+    block.style.flexDirection = 'column';
+    btn.style.opacity = '';
+    btn.style.pointerEvents = '';
+
+    block.innerHTML = '';
+    cart.forEach((item, i) => {
+        const el = document.createElement('div');
+        el.className = 'c-item';
+
+        const imgHTML = item.img
+            ? `<img class="c-img" src="${item.img}" alt="${item.name}"
+                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+               <div class="c-img-ph" style="display:none">${item.emoji||'🧥'}</div>`
+            : `<div class="c-img-ph">${item.emoji||'🧥'}</div>`;
+
+        el.innerHTML = `
+            ${imgHTML}
+            <div class="c-info">
+                <div class="c-name">${item.name}</div>
+                <div class="c-sub">${item.sub || ''}</div>
+                <div class="c-badges">
+                    ${item.size ? `<span class="c-badge">Size: ${item.size}</span>` : ''}
+                    <span class="c-badge">Clothing</span>
+                </div>
+                <div class="c-qty">
+                    <button class="c-qbtn" onclick="chQty(${i},-1)">−</button>
+                    <span class="c-qnum">${item.qty}</span>
+                    <button class="c-qbtn" onclick="chQty(${i},1)">+</button>
+                </div>
+            </div>
+            <div class="c-right">
+                <div class="c-price">₱${(item.price * item.qty).toLocaleString()}</div>
+                <div class="c-unit">₱${item.price.toLocaleString()} each</div>
+                <button class="c-rm" onclick="rmItem(${i})">Remove</button>
+            </div>`;
+        block.appendChild(el);
+    });
+
+    renderSummary();
+}
+
+function chQty(i, d) {
+    cart[i].qty = Math.max(1, cart[i].qty + d);
+    localStorage.setItem('ascend_checkout_cart', JSON.stringify(cart));
+    renderCart();
+}
+
+function rmItem(i) {
+    cart.splice(i, 1);
+    localStorage.setItem('ascend_checkout_cart', JSON.stringify(cart));
+    renderCart();
+}
+
+/* ─── RENDER SUMMARY (right panel always visible) ─── */
+function renderSummary() {
+    const el = document.getElementById('sm-items');
+
+    if (!cart.length) {
+        el.innerHTML = '<div class="sm-empty">No items in cart.</div>';
+        document.getElementById('sm-sub').textContent  = '₱0';
+        document.getElementById('sm-ship').textContent = '₱99';
+        document.getElementById('sm-disc').textContent = '—';
+        document.getElementById('sm-tot').textContent  = '₱99';
+        return;
+    }
+
+    el.innerHTML = '';
+    cart.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'sm-item';
+        div.innerHTML = `
+            <img class="sm-img" src="${item.img}" alt="${item.name}"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="sm-img-ph" style="display:none">${item.emoji||'🧥'}</div>
+            <div class="sm-info">
+                <div class="sm-name">${item.name}</div>
+                <div class="sm-meta">${item.size ? 'Size: '+item.size+' · ' : ''}Qty: ${item.qty}</div>
+            </div>
+            <div class="sm-price">₱${(item.price * item.qty).toLocaleString()}</div>`;
+        el.appendChild(div);
+    });
+
+    const sub  = cart.reduce((s,c) => s + c.price * c.qty, 0);
+    const ship = sub >= 2000 ? 0 : 99;
+    const disc = promoOn ? Math.round(sub * 0.1) : 0;
+    const tot  = sub + ship - disc;
+
+    document.getElementById('sm-sub').textContent  = '₱' + sub.toLocaleString();
+    const shipEl = document.getElementById('sm-ship');
+    shipEl.textContent  = ship === 0 ? 'FREE' : '₱' + ship;
+    shipEl.className = 'sm-rv' + (ship === 0 ? ' free' : '');
+    document.getElementById('sm-disc').textContent = disc ? '-₱' + disc.toLocaleString() : '—';
+    document.getElementById('sm-tot').textContent  = '₱' + tot.toLocaleString();
+}
+
+/* ─── STEP NAVIGATION ─── */
+function toStep(n) {
+    if (n === 2 && !cart.length) {
+        alert('Your cart is empty. Please go back and add items.');
+        return;
+    }
+    document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('step-' + n).classList.add('active');
+
+    const ids = ['ns1','ns2','ns3','ns4'];
+    ids.forEach((id, i) => {
+        const el = document.getElementById(id);
+        el.className = 'nav-step';
+        if (i + 1 < n)  el.classList.add('done');
+        if (i + 1 === n) el.classList.add('active');
+    });
+
+    if (n === 4) buildReview();
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+/* ─── STEP 2 VALIDATION ─── */
+function validateStep2() {
+    const required = [
+        {id:'f-fname',label:'First Name'},
+        {id:'f-lname',label:'Last Name'},
+        {id:'f-email',label:'Email Address'},
+        {id:'f-phone',label:'Phone Number'},
+        {id:'f-addr', label:'Complete Address'},
+        {id:'f-city', label:'City'},
+        {id:'f-prov', label:'Province'},
+        {id:'f-region',label:'Region'},
+    ];
+    for (const {id, label} of required) {
+        const el = document.getElementById(id);
+        if (!el.value.trim()) {
+            el.classList.add('err');
+            el.focus();
+            setTimeout(() => el.classList.remove('err'), 2500);
+            alert(`Please fill in: ${label}`);
+            return;
+        }
+    }
+    toStep(3);
+}
+
+/* ─── PAYMENT SELECTION ─── */
+function selPay(el, method) {
+    document.querySelectorAll('.pay-opt').forEach(p => p.classList.remove('sel'));
+    el.classList.add('sel');
+    payMethod = method;
+    document.getElementById('card-fields').style.display = method === 'Card' ? 'block' : 'none';
+}
+
+/* ─── CARD FORMAT ─── */
+function fmtCard(el) {
+    let v = el.value.replace(/\D/g,'').substring(0,16);
+    el.value = v.replace(/(.{4})/g,'$1 ').trim();
+}
+function fmtExp(el) {
+    let v = el.value.replace(/\D/g,'');
+    if (v.length >= 2) v = v.substring(0,2) + ' / ' + v.substring(2,4);
+    el.value = v;
+}
+
+/* ─── PROMO CODE ─── */
+function applyPromo() {
+    const v = document.getElementById('promo-in').value.trim().toUpperCase();
+    const ok = document.getElementById('promo-ok');
+    const valid = ['ASCEND10','BD10','JUSTASCEND','BREATHDIVINITY'];
+    if (valid.includes(v)) {
+        promoOn = true;
+        ok.style.display = 'block';
+        renderSummary();
+    } else {
+        promoOn = false;
+        ok.style.display = 'none';
+        alert('Invalid code. Try: ASCEND10');
+    }
+}
+
+/* ─── BUILD REVIEW (Step 4) ─── */
+function buildReview() {
+    const el   = document.getElementById('review-block');
+    const fname = document.getElementById('f-fname').value;
+    const lname = document.getElementById('f-lname').value;
+    const email = document.getElementById('f-email').value;
+    const phone = document.getElementById('f-phone').value;
+    const addr  = document.getElementById('f-addr').value;
+    const city  = document.getElementById('f-city').value;
+    const prov  = document.getElementById('f-prov').value;
+    const notes = document.getElementById('f-notes').value;
+
+    const sub  = cart.reduce((s,c) => s + c.price * c.qty, 0);
+    const ship = sub >= 2000 ? 0 : 99;
+    const disc = promoOn ? Math.round(sub * 0.1) : 0;
+    const tot  = sub + ship - disc;
+
+    const itemsHTML = cart.map(item => `
+        <div class="rv-item">
+            <img class="rv-img" src="${item.img}" alt="${item.name}"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="rv-img-ph" style="display:none">${item.emoji||'🧥'}</div>
+            <div>
+                <div class="rv-iname">${item.name}</div>
+                <div class="rv-imeta">${item.size ? 'Size: '+item.size+' · ' : ''}Qty: ${item.qty}</div>
+            </div>
+            <div class="rv-iprice">₱${(item.price*item.qty).toLocaleString()}</div>
+        </div>`).join('');
+
+    el.innerHTML = `
+        <div class="rv-row">
+            <div class="rv-lbl">Ship To</div>
+            <div class="rv-val">${fname} ${lname}</div>
+            <div class="rv-sub">${addr}, ${city}, ${prov}</div>
+            <div class="rv-sub">${phone} · ${email}</div>
+            ${notes ? `<div class="rv-sub" style="margin-top:.3rem;color:var(--accent);">Note: ${notes}</div>` : ''}
+        </div>
+        <div class="rv-row" style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+                <div class="rv-lbl">Payment</div>
+                <div class="rv-val">${payMethod}</div>
+            </div>
+            <div style="text-align:right;">
+                <div class="rv-lbl">Order Total</div>
+                <div style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:3px;">₱${tot.toLocaleString()}</div>
+                ${ship===0?'<div style="font-size:.6rem;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-top:.2rem;">Free Shipping</div>':''}
+            </div>
+        </div>
+        <div class="rv-row">
+            <div class="rv-lbl">${cart.length} Item${cart.length!==1?'s':''} Ordered</div>
+        </div>
+        <div class="rv-items-wrap">${itemsHTML}</div>`;
+}
+
+/* ─── PLACE ORDER ─── */
+function placeOrder() {
+    const num = 'ASC-' + Math.floor(100000 + Math.random() * 900000);
+    document.getElementById('success-num').textContent = 'Order #' + num;
+
+    document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('success-screen').classList.add('vis');
+
+    ['ns1','ns2','ns3','ns4'].forEach(id => {
+        document.getElementById(id).className = 'nav-step done';
+    });
+
+    // Clear both cart keys
+    localStorage.removeItem('ascend_checkout_cart');
+    localStorage.removeItem('ascend_cart');
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+/* ─── INIT ─── */
+renderCart();
+</script>
+</body>
+</html>

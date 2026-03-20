@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="AscendLogo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Size Guide | Ascend × breathdivinity</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black:#080808; --white:#f4f4ef; --mid:#0f0f0f;
+            --border:#1c1c1c; --muted:#484848; --accent:#c8c8c0;
+        }
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+        html{scroll-behavior:smooth;}
+        body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;cursor:none;}
+
+        /* CURSOR */
+        .cur{width:8px;height:8px;background:var(--white);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+        .cur-ring{width:34px;height:34px;border:1px solid rgba(244,244,239,.28);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .25s,height .25s,border-color .25s;}
+        .cur-ring.xl{width:64px;height:64px;border-color:rgba(244,244,239,.5);}
+
+        /* NAV */
+        nav{position:fixed;top:0;left:0;right:0;height:64px;display:grid;grid-template-columns:220px 1fr 220px;align-items:center;padding:0 2.5rem;background:rgba(8,8,8,.97);border-bottom:1px solid var(--border);z-index:400;}
+        .nav-brand{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:5px;color:var(--white);text-decoration:none;}
+        .nav-center{display:flex;justify-content:center;gap:2.5rem;list-style:none;}
+        .nav-center a{font-size:.68rem;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;}
+        .nav-center a:hover,.nav-center a.active{color:var(--white);}
+        .nav-right{display:flex;justify-content:flex-end;}
+        .nav-cta{font-size:.65rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--black);background:var(--white);text-decoration:none;padding:.5rem 1.3rem;border-radius:1px;transition:background .2s;}
+        .nav-cta:hover{background:var(--accent);}
+
+        /* TICKER */
+        .ticker{margin-top:64px;height:32px;border-bottom:1px solid var(--border);overflow:hidden;display:flex;align-items:center;}
+        .t-track{display:flex;animation:tRoll 28s linear infinite;white-space:nowrap;}
+        .t-item{font-size:.56rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);padding:0 2.4rem;border-right:1px solid var(--border);display:flex;align-items:center;height:32px;flex-shrink:0;}
+        .t-item b{color:var(--white);font-weight:500;margin-left:.4rem;}
+        @keyframes tRoll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+        /* ══ PAGE HEADER ══ */
+        .page-header{
+            min-height:40vh;display:flex;flex-direction:column;justify-content:flex-end;
+            padding:5rem;border-bottom:1px solid var(--border);
+            position:relative;overflow:hidden;
+        }
+        .page-header::before{
+            content:'SIZING';
+            position:absolute;right:-1rem;top:50%;transform:translateY(-50%);
+            font-family:'Bebas Neue',sans-serif;
+            font-size:clamp(6rem,16vw,18rem);
+            letter-spacing:-.02em;color:rgba(244,244,239,.022);
+            pointer-events:none;white-space:nowrap;line-height:1;
+        }
+        .ph-inner{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:flex-end;position:relative;z-index:1;}
+        .ph-eyebrow{font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:1.4rem;display:flex;align-items:center;gap:.8rem;}
+        .ph-eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--muted);}
+        .ph-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.5rem,6.5vw,7rem);line-height:.88;letter-spacing:3px;}
+        .ph-title .outline{color:transparent;-webkit-text-stroke:1.5px var(--white);}
+        .ph-right{display:flex;flex-direction:column;gap:1.2rem;padding-bottom:.3rem;}
+        .ph-desc{font-size:.86rem;color:var(--muted);line-height:1.95;max-width:400px;}
+        .ph-desc strong{color:var(--accent);font-weight:500;}
+
+        /* ══ CATEGORY TABS ══ */
+        .cat-tabs{
+            display:flex;border-bottom:1px solid var(--border);
+            overflow-x:auto;scrollbar-width:none;
+        }
+        .cat-tabs::-webkit-scrollbar{display:none;}
+        .cat-tab{
+            flex-shrink:0;
+            font-size:.62rem;letter-spacing:2.5px;text-transform:uppercase;
+            color:var(--muted);padding:1rem 2rem;
+            border-right:1px solid var(--border);
+            background:none;cursor:none;
+            font-family:'DM Sans',sans-serif;font-weight:600;
+            transition:color .2s,background .2s;
+            border-bottom:none;
+        }
+        .cat-tab:hover{color:var(--white);background:rgba(244,244,239,.03);}
+        .cat-tab.active{color:var(--white);background:rgba(244,244,239,.05);}
+
+        /* ══ MAIN CONTENT ══ */
+        .main-wrap{
+            display:grid;grid-template-columns:1fr 340px;
+            border-bottom:1px solid var(--border);
+            align-items:start;
+        }
+
+        /* ── SIZE TABLE AREA ── */
+        .table-area{border-right:1px solid var(--border);}
+
+        .section-label{
+            padding:1.1rem 2.5rem;border-bottom:1px solid var(--border);
+            display:flex;align-items:center;justify-content:space-between;
+        }
+        .sl-t{font-size:.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);}
+        .sl-unit-toggle{display:flex;gap:0;}
+        .unit-btn{
+            font-size:.56rem;letter-spacing:2px;text-transform:uppercase;
+            color:var(--muted);background:transparent;
+            border:1px solid var(--border);padding:.3rem .8rem;
+            cursor:none;font-family:'DM Sans',sans-serif;
+            transition:background .2s,color .2s;
+        }
+        .unit-btn:first-child{border-radius:1px 0 0 1px;}
+        .unit-btn:last-child{border-radius:0 1px 1px 0;border-left:none;}
+        .unit-btn.active{background:var(--white);color:var(--black);}
+
+        /* Table panel */
+        .table-panel{display:none;padding:2.5rem;}
+        .table-panel.active{display:block;}
+
+        .size-table{width:100%;border-collapse:collapse;}
+        .size-table th{
+            font-size:.54rem;letter-spacing:2.5px;text-transform:uppercase;
+            color:var(--muted);font-weight:500;
+            padding:.9rem 1.2rem;text-align:left;
+            border-bottom:1px solid var(--border);
+            white-space:nowrap;
+        }
+        .size-table td{
+            font-size:.82rem;padding:.85rem 1.2rem;
+            border-bottom:1px solid var(--border);
+            transition:background .2s;
+        }
+        .size-table tr:last-child td{border-bottom:none;}
+        .size-table tbody tr:hover td{background:var(--mid);}
+
+        /* Size badge in first column */
+        .size-badge{
+            font-family:'Bebas Neue',sans-serif;
+            font-size:1.1rem;letter-spacing:2px;
+        }
+        .size-badge.highlight{
+            color:var(--white);
+        }
+        /* Recommended row */
+        .size-table tr.recommended td{background:rgba(200,200,192,.04);}
+        .size-table tr.recommended td:first-child{position:relative;}
+        .rec-tag{
+            font-size:.45rem;letter-spacing:1.5px;text-transform:uppercase;
+            color:var(--black);background:var(--accent);
+            padding:.15rem .4rem;border-radius:1px;
+            margin-left:.6rem;vertical-align:middle;font-weight:700;
+        }
+
+        /* ── SIDEBAR: HOW TO MEASURE ── */
+        .sidebar{padding:2.5rem 2rem;}
+        .sidebar-title{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:3px;margin-bottom:.5rem;}
+        .sidebar-sub{font-size:.72rem;color:var(--muted);line-height:1.7;margin-bottom:2rem;}
+
+        /* Measurement diagram (CSS drawing) */
+        .measure-diagram{
+            border:1px solid var(--border);border-radius:1px;
+            padding:2rem 1.5rem;margin-bottom:2rem;
+            display:flex;flex-direction:column;gap:1.4rem;
+            background:var(--mid);
+        }
+        .measure-item{display:flex;gap:1rem;align-items:flex-start;}
+        .measure-num{
+            width:24px;height:24px;flex-shrink:0;
+            border:1px solid var(--border);border-radius:1px;
+            display:flex;align-items:center;justify-content:center;
+            font-family:'Bebas Neue',sans-serif;font-size:.9rem;letter-spacing:1px;
+            color:var(--accent);margin-top:.05rem;
+        }
+        .measure-name{font-size:.75rem;font-weight:600;margin-bottom:.2rem;}
+        .measure-desc{font-size:.68rem;color:var(--muted);line-height:1.65;}
+
+        /* Fit note */
+        .fit-note{
+            border:1px solid var(--border);padding:1.2rem 1.4rem;
+            border-radius:1px;margin-bottom:1.5rem;
+        }
+        .fit-note-label{font-size:.52rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;}
+        .fit-note-body{font-size:.75rem;color:var(--accent);line-height:1.7;font-style:italic;}
+
+        /* Sizes available */
+        .sizes-row{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.5rem;}
+        .size-chip{
+            font-family:'Bebas Neue',sans-serif;font-size:.9rem;letter-spacing:2px;
+            border:1px solid var(--border);padding:.35rem .7rem;border-radius:1px;
+            color:var(--muted);transition:border-color .2s,color .2s;
+            cursor:none;
+        }
+        .size-chip:hover{border-color:var(--accent);color:var(--white);}
+
+        .shop-link{
+            display:flex;align-items:center;justify-content:space-between;
+            width:100%;padding:.9rem 1.2rem;
+            background:var(--white);color:var(--black);
+            font-family:'DM Sans',sans-serif;font-size:.65rem;
+            font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
+            text-decoration:none;border-radius:1px;
+            transition:background .2s;
+        }
+        .shop-link:hover{background:var(--accent);}
+
+        /* ══ TIPS STRIP ══ */
+        .tips-strip{
+            display:grid;grid-template-columns:repeat(3,1fr);
+            border-bottom:1px solid var(--border);
+        }
+        .tip-block{
+            padding:2rem 2.5rem;border-right:1px solid var(--border);
+            transition:background .25s;
+        }
+        .tip-block:last-child{border-right:none;}
+        .tip-block:hover{background:var(--mid);}
+        .tip-icon{font-size:1.1rem;margin-bottom:.7rem;filter:grayscale(1);}
+        .tip-title{font-size:.78rem;font-weight:600;margin-bottom:.4rem;}
+        .tip-body{font-size:.72rem;color:var(--muted);line-height:1.7;}
+
+        /* FOOTER */
+        footer{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--border);}
+        .fl{padding:3.5rem 4rem;border-right:1px solid var(--border);}
+        .fl-brand{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:6px;margin-bottom:.6rem;}
+        .fl-tag{font-size:.72rem;color:var(--muted);line-height:1.8;}
+        .fr{display:grid;grid-template-columns:1fr 1fr;}
+        .fc{padding:3.5rem 2.5rem;border-right:1px solid var(--border);}
+        .fc:last-child{border-right:none;}
+        .fc-t{font-size:.56rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:1.2rem;}
+        .fc ul{list-style:none;display:flex;flex-direction:column;gap:.7rem;}
+        .fc a{font-size:.76rem;color:var(--white);text-decoration:none;opacity:.38;transition:opacity .2s;}
+        .fc a:hover{opacity:1;}
+        .fbot{padding:1.2rem 4rem;display:flex;justify-content:space-between;border-top:1px solid var(--border);}
+        .fbot p{font-size:.58rem;color:var(--muted);letter-spacing:1px;}
+
+        .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease;}
+        .reveal.visible{opacity:1;transform:translateY(0);}
+
+        ::-webkit-scrollbar{width:3px;}
+        ::-webkit-scrollbar-track{background:var(--black);}
+        ::-webkit-scrollbar-thumb{background:var(--border);}
+
+        @media(max-width:1024px){
+            nav{grid-template-columns:auto 1fr auto;padding:0 1.2rem;}
+            .page-header{padding:3rem 2rem;}
+            .ph-inner{grid-template-columns:1fr;gap:2rem;}
+            .main-wrap{grid-template-columns:1fr;}
+            .table-area{border-right:none;border-bottom:1px solid var(--border);}
+            .tips-strip{grid-template-columns:1fr;}
+            .tip-block{border-right:none;border-bottom:1px solid var(--border);}
+            .tip-block:last-child{border-bottom:none;}
+            footer{grid-template-columns:1fr;}
+            .fl{border-right:none;border-bottom:1px solid var(--border);}
+            .fbot{flex-direction:column;gap:.4rem;}
+        }
+    </style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+<div class="cur-ring" id="cur-ring"></div>
+
+<!-- NAV -->
+<nav>
+    <div><a href="index.html" class="nav-brand"><img src="data:image/png;base64,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" alt="Ascend" style="height:28px;width:auto;object-fit:contain;display:inline-block;vertical-align:middle;margin-right:6px;">ASCEND</a></div>
+    <ul class="nav-center">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-right"><a href="shop.html" class="nav-cta">Shop Now</a></div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker"><div class="t-track" id="t-track"></div></div>
+
+<!-- ══ PAGE HEADER ══ -->
+<div class="page-header">
+    <div class="ph-inner">
+        <div>
+            <p class="ph-eyebrow">Ascend × breathdivinity</p>
+            <h1 class="ph-title">
+                SIZE<br><span class="outline">GUIDE.</span>
+            </h1>
+        </div>
+        <div class="ph-right">
+            <p class="ph-desc">
+                All breathdivinity pieces run <strong>oversized and streetwear-fit.</strong>
+                Use this guide to find your perfect size across tees, hoodies, longsleeved shirts, sweatpants, and tanks.
+                When in doubt — size down for a more fitted look.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- ══ CATEGORY TABS ══ -->
+<div class="cat-tabs" id="cat-tabs">
+    <button class="cat-tab active" data-cat="tees">Tees & Tanks</button>
+    <button class="cat-tab" data-cat="hoodies">Hoodies</button>
+    <button class="cat-tab" data-cat="longsleeve">Longsleeved</button>
+    <button class="cat-tab" data-cat="pants">Sweatpants</button>
+</div>
+
+<!-- ══ MAIN WRAP ══ -->
+<div class="main-wrap reveal">
+
+    <!-- SIZE TABLES -->
+    <div class="table-area">
+
+        <!-- Label + unit toggle -->
+        <div class="section-label">
+            <span class="sl-t" id="table-label">Tees & Tanks — Measurements</span>
+            <div class="sl-unit-toggle">
+                <button class="unit-btn active" data-unit="cm">CM</button>
+                <button class="unit-btn" data-unit="in">IN</button>
+            </div>
+        </div>
+
+        <!-- ── TEES & TANKS ── -->
+        <div class="table-panel active" id="panel-tees">
+            <table class="size-table" data-type="tees">
+                <thead>
+                    <tr>
+                        <th>Size</th>
+                        <th>Chest</th>
+                        <th>Length</th>
+                        <th>Shoulder</th>
+                        <th>Sleeve</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="size-badge">XS</span></td>
+                        <td class="mval" data-cm="88–92" data-in="34.6–36.2">88–92</td>
+                        <td class="mval" data-cm="67–69" data-in="26.4–27.2">67–69</td>
+                        <td class="mval" data-cm="43–44" data-in="16.9–17.3">43–44</td>
+                        <td class="mval" data-cm="20–21" data-in="7.9–8.3">20–21</td>
+                    </tr>
+                    <tr>
+                        <td><span class="size-badge">S</span></td>
+                        <td class="mval" data-cm="96–100" data-in="37.8–39.4">96–100</td>
+                        <td class="mval" data-cm="70–72" data-in="27.6–28.3">70–72</td>
+                        <td class="mval" data-cm="45–46" data-in="17.7–18.1">45–46</td>
+                        <td class="mval" data-cm="21–22" data-in="8.3–8.7">21–22</td>
+                    </tr>
+                    <tr class="recommended">
+                        <td><span class="size-badge highlight">M</span><span class="rec-tag">Popular</span></td>
+                        <td class="mval" data-cm="104–108" data-in="40.9–42.5">104–108</td>
+                        <td class="mval" data-cm="73–75" data-in="28.7–29.5">73–75</td>
+                        <td class="mval" data-cm="47–48" data-in="18.5–18.9">47–48</td>
+                        <td class="mval" data-cm="22–23" data-in="8.7–9.1">22–23</td>
+                    </tr>
+                    <tr class="recommended">
+                        <td><span class="size-badge highlight">L</span><span class="rec-tag">Popular</span></td>
+                        <td class="mval" data-cm="112–116" data-in="44.1–45.7">112–116</td>
+                        <td class="mval" data-cm="76–78" data-in="29.9–30.7">76–78</td>
+                        <td class="mval" data-cm="49–50" data-in="19.3–19.7">49–50</td>
+                        <td class="mval" data-cm="23–24" data-in="9.1–9.4">23–24</td>
+                    </tr>
+                    <tr>
+                        <td><span class="size-badge">XL</span></td>
+                        <td class="mval" data-cm="120–124" data-in="47.2–48.8">120–124</td>
+                        <td class="mval" data-cm="79–81" data-in="31.1–31.9">79–81</td>
+                        <td class="mval" data-cm="51–52" data-in="20.1–20.5">51–52</td>
+                        <td class="mval" data-cm="24–25" data-in="9.4–9.8">24–25</td>
+                    </tr>
+                    <tr>
+                        <td><span class="size-badge">XXL</span></td>
+                        <td class="mval" data-cm="128–132" data-in="50.4–52.0">128–132</td>
+                        <td class="mval" data-cm="82–84" data-in="32.3–33.1">82–84</td>
+                        <td class="mval" data-cm="53–55" data-in="20.9–21.7">53–55</td>
+                        <td class="mval" data-cm="25–26" data-in="9.8–10.2">25–26</td>
+                    </tr>
+                    <tr>
+                        <td><span class="size-badge">3XL</span></td>
+                        <td class="mval" data-cm="136–140" data-in="53.5–55.1">136–140</td>
+                        <td class="mval" data-cm="85–87" data-in="33.5–34.3">85–87</td>
+                        <td class="mval" data-cm="56–58" data-in="22.0–22.8">56–58</td>
+                        <td class="mval" data-cm="26–27" data-in="10.2–10.6">26–27</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ── HOODIES ── -->
+        <div class="table-panel" id="panel-hoodies">
+            <table class="size-table" data-type="hoodies">
+                <thead>
+                    <tr>
+                        <th>Size</th>
+                        <th>Chest</th>
+                        <th>Length</th>
+                        <th>Shoulder</th>
+                        <th>Sleeve</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="size-badge">XS</span></td>
+                        <td class="mval" data-cm="94–98" data-in="37.0–38.6">94–98</td>
+                        <td class="mval" data-cm="68–70" data-in="26.8–27.6">68–70</td>
+                        <td class="mval" data-cm="46–47" data-in="18.1–18.5">46–47</td>
+                        <td class="mval" data-cm="62–64" data-in="24.4–25.2">62–64</td>
+                    </tr>
+                    <tr>
+                        <td><span class="size-badge">S</span></td>
+                        <td class="mval" data-cm="102–106" data-in="40.2–41.7">102–106</td>
+                        <td class="mval" data-cm="71–73" data-in="28.0–28.7">71–73</td>
+                        <td class="mval" data-cm="48–49" data-in="18.9–19.3">48–49</td>
+                        <td class="mval" data-cm="64–66" data-in="25.2–26.0">64–66</td>
+                    </tr>
+                    <tr class="recommended">
+                        <td><span class="size-badge highlight">M</span><span class="rec-tag">Popular</span></td>
+                        <td class="mval" data-cm="110–114" data-in="43.3–44.9">110–114</td>
+                        <td class="mval" data-cm="74–76" data-in="29.1–29.9">74–76</td>
+                        <td class="mval" data-cm="50–51" data-in="19.7–20.1">50–51</td>
+                        <td class="mval" data-cm="66–68" data-in="26.0–26.8">66–68</td>
+                    </tr>
+                    <tr class="recommended">
+                        <td><span class="size-badge highlight">L</span><span class="rec-tag">Popular</span></td>
+                        <td class="mval" data-cm="118–122" data-in="46.5–48.0">118–122</td>
+                        <td class="mval" data-cm="77–79" data-in="30.3–31.1">77–79</td>
+                        <td class="mval" data-cm="52–54" data-in="20.5–21.3">52–54</td>
+                        <td class="mval" data-cm="68–70" data-in="26.8–27.6">68–70</td>
+                    </tr>
+                    <tr>
+                        <td><span class="size-badge">XL</span></td>
+                        <td class="mval" data-cm="126–130" data-in="49.6–51.2">126–130</td>
+                        <td class="mval" data-cm="80–82" data-in="31.5–32.3">80–82</td>
+                        <td class="mval" data-cm="55–57" data-in="21.7–22.4">55–57</td>
+                        <td class="mval" data-cm="70–72" data-in="27.6–28.3">70–72</td>
+                    </tr>
+                    <tr>
+                        <td><span class="size-badge">XXL</span></td>
+                        <td class="mval" data-cm="134–138" data-in="52.8–54.3">134–138</td>
+                        <td class="mval" data-cm="83–85" data-in="32.7–33.5">83–85</td>
+                        <td class="mval" data-cm="58–60" data-in="22.8–23.6">58–60</td>
+                        <td class="mval" data-cm="72–74" data-in="28.3–29.1">72–74</td>
+                    </tr>
+                    <tr>
+                        <td><span class="size-badge">3XL</span></td>
+                        <td class="mval" data-cm="142–146" data-in="55.9–57.5">142–146</td>
+                        <td class="mval" data-cm="86–88" data-in="33.9–34.6">86–88</td>
+                        <td class="mval" data-cm="61–63" data-in="24.0–24.8">61–63</td>
+                        <td class="mval" data-cm="74–76" data-in="29.1–29.9">74–76</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ── LONGSLEEVED ── -->
+        <div class="table-panel" id="panel-longsleeve">
+            <table class="size-table" data-type="longsleeve">
+                <thead>
+                    <tr>
+                        <th>Size</th>
+                        <th>Chest</th>
+                        <th>Length</th>
+                        <th>Shoulder</th>
+                        <th>Sleeve</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="size-badge">XS</span></td>
+                        <td class="mval" data-cm="90–94" data-in="35.4–37.0">90–94</td>
+                        <td class="mval" data-cm="68–70" data-in="26.8–27.6">68–70</td>
+                        <td class="mval" data-cm="44–45" data-in="17.3–17.7">44–45</td>
+                        <td class="mval" data-cm="60–62" data-in="23.6–24.4">60–62</td>
+                    </tr>
+                    <tr>
+                        <td><span class="size-badge">S</span></td>
+                        <td class="mval" data-cm="98–102" data-in="38.6–40.2">98–102</td>
+                        <td class="mval" data-cm="71–73" data-in="28.0–28.7">71–73</td>
+                        <td class="mval" data-cm="46–47" data-in="18.1–18.5">46–47</td>
+                        <td class="mval" data-cm="62–64" data-in="24.4–25.2">62–64</td>
+                    </tr>
+                    <tr class="recommended">
+                        <td><span class="size-badge highlight">M</span><span class="rec-tag">Popular</span></td>
+                        <td class="mval" data-cm="106–110" data-in="41.7–43.3">106–110</td>
+                        <td class="mval" data-cm="74–76" data-in="29.1–29.9">74–76</td>
+                        <td class="mval" data-cm="48–49" data-in="18.9–19.3">48–49</td>
+                        <td class="mval" data-cm="64–66" data-in="25.2–26.0">64–66</td>
+                    </tr>
+                    <tr class="recommended">
+                        <td><span class="size-badge highlight">L</span><span class="rec-tag">Popular</span></td>
+                        <td class="mval" data-cm="114–118" data-in="44.9–46.5">114–118</td>
+                        <td class="mval" data-cm="77–79" data-in="30.3–31.1">77–79</td>
+                        <td class="mval" data-cm="50–52" data-in="19.7–20.5">50–52</td>
+                        <td class="mval" data-cm="66–68" data-in="26.0–26.8">66–68</td>
+                    </tr>
+                    <tr>
+                        <td><span class="size-badge">XL</span></td>
+                        <td class="mval" data-cm="122–126" data-in="48.0–49.6">122–126</td>
+                        <td class="mval" data-cm="80–82" data-in="31.5–32.3">80–82</td>
+                        <td class="mval" data-cm="53–55" data-in="20.9–21.7">53–55</td>
+                        <td class="mval" data-cm="68–70" data-in="26.8–27.6">68–70</td>
+                    </tr>
+                    <tr>
+                        <td><span class="size-badge">XXL</span></td>
+                        <td class="mval" data-cm="130–134" data-in="51.2–52.8">130–134</td>
+                        <td class="mval" data-cm="83–85" data-in="32.7–33.5">83–85</td>
+                        <td class="mval" data-cm="56–58" data-in="22.0–22.8">56–58</td>
+                        <td class="mval" data-cm="70–72" data-in="27.6–28.3">70–72</td>
+                    </tr>
+                    <tr>
+                        <td><span class="size-badge">3XL</span></td>
+                        <td class="mval" data-cm="138–142" data-in="54.3–55.9">138–142</td>
+                        <td class="mval" data-cm="86–88" data-in="33.9–34.6">86–88</td>
+                        <td class="mval" data-cm="59–61" data-in="23.2–24.0">59–61</td>
+                        <td class="mval" data-cm="72–74" data-in="28.3–29.1">72–74</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ── SWEATPANTS ── -->
+        <div class="table-panel" id="panel-pants">
+            <table class="size-table" data-type="pants">
+                <thead>
+                    <tr>
+                        <th>Size</th>
+                        <th>Waist</th>
+                        <th>Hip</th>
+                        <th>Inseam</th>
+                        <th>Length</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="size-badge">XS</span></td>
+                        <td class="mval" data-cm="62–66" data-in="24.4–26.0">62–66</td>
+                        <td class="mval" data-cm="86–90" data-in="33.9–35.4">86–90</td>
+                        <td class="mval" data-cm="72–74" data-in="28.3–29.1">72–74</td>
+                        <td class="mval" data-cm="96–98" data-in="37.8–38.6">96–98</td>
+                    </tr>
+                    <tr>
+                        <td><span class="size-badge">S</span></td>
+                        <td class="mval" data-cm="68–72" data-in="26.8–28.3">68–72</td>
+                        <td class="mval" data-cm="92–96" data-in="36.2–37.8">92–96</td>
+                        <td class="mval" data-cm="74–76" data-in="29.1–29.9">74–76</td>
+                        <td class="mval" data-cm="98–100" data-in="38.6–39.4">98–100</td>
+                    </tr>
+                    <tr class="recommended">
+                        <td><span class="size-badge highlight">M</span><span class="rec-tag">Popular</span></td>
+                        <td class="mval" data-cm="74–78" data-in="29.1–30.7">74–78</td>
+                        <td class="mval" data-cm="98–102" data-in="38.6–40.2">98–102</td>
+                        <td class="mval" data-cm="76–78" data-in="29.9–30.7">76–78</td>
+                        <td class="mval" data-cm="100–102" data-in="39.4–40.2">100–102</td>
+                    </tr>
+                    <tr class="recommended">
+                        <td><span class="size-badge highlight">L</span><span class="rec-tag">Popular</span></td>
+                        <td class="mval" data-cm="80–84" data-in="31.5–33.1">80–84</td>
+                        <td class="mval" data-cm="104–108" data-in="40.9–42.5">104–108</td>
+                        <td class="mval" data-cm="78–80" data-in="30.7–31.5">78–80</td>
+                        <td class="mval" data-cm="102–104" data-in="40.2–40.9">102–104</td>
+                    </tr>
+                    <tr>
+                        <td><span class="size-badge">XL</span></td>
+                        <td class="mval" data-cm="86–90" data-in="33.9–35.4">86–90</td>
+                        <td class="mval" data-cm="110–114" data-in="43.3–44.9">110–114</td>
+                        <td class="mval" data-cm="80–82" data-in="31.5–32.3">80–82</td>
+                        <td class="mval" data-cm="104–106" data-in="40.9–41.7">104–106</td>
+                    </tr>
+                    <tr>
+                        <td><span class="size-badge">XXL</span></td>
+                        <td class="mval" data-cm="92–96" data-in="36.2–37.8">92–96</td>
+                        <td class="mval" data-cm="116–120" data-in="45.7–47.2">116–120</td>
+                        <td class="mval" data-cm="82–84" data-in="32.3–33.1">82–84</td>
+                        <td class="mval" data-cm="106–108" data-in="41.7–42.5">106–108</td>
+                    </tr>
+                    <tr>
+                        <td><span class="size-badge">3XL</span></td>
+                        <td class="mval" data-cm="98–102" data-in="38.6–40.2">98–102</td>
+                        <td class="mval" data-cm="122–126" data-in="48.0–49.6">122–126</td>
+                        <td class="mval" data-cm="84–86" data-in="33.1–33.9">84–86</td>
+                        <td class="mval" data-cm="108–110" data-in="42.5–43.3">108–110</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div><!-- /table-area -->
+
+    <!-- ── SIDEBAR ── -->
+    <div class="sidebar">
+        <h3 class="sidebar-title">HOW TO MEASURE</h3>
+        <p class="sidebar-sub">Use a soft measuring tape. Measure over light clothing or directly on skin for best accuracy.</p>
+
+        <div class="measure-diagram">
+            <div class="measure-item">
+                <div class="measure-num">1</div>
+                <div class="measure-text">
+                    <div class="measure-name">Chest</div>
+                    <div class="measure-desc">Measure around the fullest part of your chest, keeping the tape parallel to the ground.</div>
+                </div>
+            </div>
+            <div class="measure-item">
+                <div class="measure-num">2</div>
+                <div class="measure-text">
+                    <div class="measure-name">Length</div>
+                    <div class="measure-desc">From the highest point of the shoulder down to the hem of the garment.</div>
+                </div>
+            </div>
+            <div class="measure-item">
+                <div class="measure-num">3</div>
+                <div class="measure-text">
+                    <div class="measure-name">Shoulder</div>
+                    <div class="measure-desc">From one shoulder seam to the other, measured across the back.</div>
+                </div>
+            </div>
+            <div class="measure-item">
+                <div class="measure-num">4</div>
+                <div class="measure-text">
+                    <div class="measure-name">Sleeve</div>
+                    <div class="measure-desc">From the shoulder seam down to the cuff. For hoodies and longsleeved, measure from shoulder tip to wrist.</div>
+                </div>
+            </div>
+            <div class="measure-item">
+                <div class="measure-num">5</div>
+                <div class="measure-text">
+                    <div class="measure-name">Waist / Hip</div>
+                    <div class="measure-desc">For pants — waist at the narrowest point, hip at the fullest part. Keep tape snug but not tight.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fit-note">
+            <div class="fit-note-label">Fit Note</div>
+            <p class="fit-note-body">"All breathdivinity pieces are cut oversized. If you prefer a more fitted silhouette, we recommend sizing down by one size."</p>
+        </div>
+
+        <p style="font-size:.56rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem;">Available Sizes</p>
+        <div class="sizes-row">
+            <span class="size-chip">XS</span>
+            <span class="size-chip">S</span>
+            <span class="size-chip">M</span>
+            <span class="size-chip">L</span>
+            <span class="size-chip">XL</span>
+            <span class="size-chip">XXL</span>
+            <span class="size-chip">3XL</span>
+        </div>
+
+        <a href="shop.html" class="shop-link">
+            <span>Shop Collection</span>
+            <span>→</span>
+        </a>
+    </div>
+
+</div><!-- /main-wrap -->
+
+<!-- ══ TIPS STRIP ══ -->
+<div class="tips-strip reveal">
+    <div class="tip-block">
+        <div class="tip-icon">📏</div>
+        <div class="tip-title">Between Sizes?</div>
+        <p class="tip-body">If your measurements fall between two sizes, go with the larger one for the intended oversized fit — or the smaller for a more structured look.</p>
+    </div>
+    <div class="tip-block">
+        <div class="tip-icon">🧺</div>
+        <div class="tip-title">After Washing</div>
+        <p class="tip-body">Wash cold, inside out, on a gentle cycle. Hang dry or tumble low. Avoid bleach. Proper care keeps graphics sharp and fabric soft longer.</p>
+    </div>
+    <div class="tip-block">
+        <div class="tip-icon">📩</div>
+        <div class="tip-title">Still Unsure?</div>
+        <p class="tip-body">Message us on the <a href="contact.html" style="color:var(--accent);text-decoration:none;">contact page</a> with your measurements and we'll recommend the right size personally.</p>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <div class="fl">
+        <div class="fl-brand">ASCEND</div>
+        <p class="fl-tag">Premium gymwear & streetwear.<br>From the USA, for the Philippines. 🇺🇸→🇵🇭</p>
+    </div>
+    <div class="fr">
+        <div class="fc">
+            <p class="fc-t">Navigate</p>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+        <div class="fc">
+            <p class="fc-t">Support</p>
+            <ul>
+                <li><a href="sizing-guide.html">Size Guide</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="#">Shipping</a></li>
+                <li><a href="#">Returns</a></li>
+            </ul>
+        </div>
+    </div>
+</footer>
+<div class="fbot">
+    <p>© 2024 Ascend Gymwear. All rights reserved.</p>
+    <p>Ascend × breathdivinity — From USA, For PH. 🇵🇭</p>
+</div>
+
+<script>
+/* CURSOR */
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function t(){cur.style.left=mx+'px';cur.style.top=my+'px';rx+=(mx-rx)*.13;ry+=(my-ry)*.13;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(t);})();
+document.addEventListener('mouseover',e=>ring.classList.toggle('xl',!!e.target.closest('a,button,.cat-tab,.size-chip')));
+
+/* TICKER */
+[['Sizes','XS to 3XL'],['Fit','Oversized Streetwear'],
+ ['Categories','Tees · Hoodies · Longsleeve · Pants'],
+ ['Tip','Size Down for Fitted Look'],
+ ['Care','Cold Wash · Hang Dry'],['Collab','breathdivinity × Ascend'],
+].flatMap(x=>[x,x]).forEach(([l,v])=>{
+    const d=document.createElement('div');
+    d.className='t-item';
+    d.innerHTML=`${l} <b>${v}</b>`;
+    document.getElementById('t-track').appendChild(d);
+});
+
+/* CATEGORY TABS */
+const tabLabels = {
+    tees: 'Tees & Tanks — Measurements',
+    hoodies: 'Hoodies — Measurements',
+    longsleeve: 'Longsleeved — Measurements',
+    pants: 'Sweatpants — Measurements',
+};
+document.querySelectorAll('.cat-tab').forEach(tab=>{
+    tab.addEventListener('click',()=>{
+        document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));
+        document.querySelectorAll('.table-panel').forEach(p=>p.classList.remove('active'));
+        tab.classList.add('active');
+        const cat = tab.dataset.cat;
+        document.getElementById('panel-'+cat).classList.add('active');
+        document.getElementById('table-label').textContent = tabLabels[cat];
+    });
+});
+
+/* CM / IN TOGGLE */
+let currentUnit = 'cm';
+document.querySelectorAll('.unit-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        document.querySelectorAll('.unit-btn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        currentUnit = btn.dataset.unit;
+        document.querySelectorAll('.mval').forEach(cell=>{
+            cell.textContent = cell.dataset[currentUnit];
+        });
+    });
+});
+
+/* SCROLL REVEAL */
+const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+},{threshold:.06});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
